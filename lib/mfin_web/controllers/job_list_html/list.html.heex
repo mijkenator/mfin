@@ -1,0 +1,6 @@
+  Jobs list
+
+
+<%= for item <- @jobs do %>
+  <p> <%= item.id %> <%= item.name %> -> <%= item.status %> </p>
+<% end %>

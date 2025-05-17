@@ -66,6 +66,8 @@ defmodule MfinWeb.Router do
     get "/users/settings", UserSettingsController, :edit
     put "/users/settings", UserSettingsController, :update
     get "/users/settings/confirm_email/:token", UserSettingsController, :confirm_email
+
+    get "/jobs/list", JobListController, :list
   end
 
   scope "/", MfinWeb do
