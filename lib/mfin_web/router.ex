@@ -21,6 +21,7 @@ defmodule MfinWeb.Router do
     pipe_through :browser
 
     get "/", PageController, :home
+    live("/jbs", JobsLive)
   end
 
   # Other scopes may use custom stacks.
