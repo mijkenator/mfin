@@ -15,7 +15,8 @@ defmodule MfinWeb.JobsLive do
   
   def handle_event("toggle-activeness", assigns, socket) do
     IO.puts("TOGGLE: #{inspect(assigns)}")
-    {:noreply, socket}
+    Mfin.Egjob.toggle_job(String.to_integer(assigns["id"]))
+    {:noreply, assign_jobs(socket)}
   end
 
 end

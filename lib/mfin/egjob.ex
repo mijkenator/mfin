@@ -37,7 +37,10 @@ defmodule Mfin.Egjob do
   end
 
   def get_all_jobs() do
-    Repo.all(Egjob) 
+    #Repo.all(Egjob) 
+    from(m in Egjob)
+    |> order_by({:asc, :id})
+    |> Repo.all()
   end
 
   def get_job_byid(id) do
