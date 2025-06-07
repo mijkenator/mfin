@@ -57,5 +57,11 @@ defmodule Mfin.Egjob do
   defp toggle_status(0), do: 1
   defp toggle_status(_), do: 0
 
+  def update(id, params) do
+    job = get_job_byid(id)
+    changeset(job, params)
+    |> Repo.update()
+  end 
+
 end
 

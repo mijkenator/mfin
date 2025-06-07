@@ -42,6 +42,7 @@ defmodule MfinWeb.CoreComponents do
   slot :inner_block, required: true
 
   def modal(assigns) do
+     assigns = assign_new(assigns, :return_to, fn -> nil end)
     ~H"""
     <div
       id={@id}

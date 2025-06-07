@@ -10,8 +10,18 @@
     action={@live_action}
     patch={~p"/jbs"}
     title="KOKOLALA"
+    return_to={~p"/jbs"}
   />
 </.modal>
+
+<script>
+window.addEventListener("phx:js-exec", ({detail}) => {
+  console.log("AEL:", detail)
+  document.querySelectorAll(detail.to).forEach((el) => {
+    liveSocket.execJS(el, el.getAttribute(detail.attr))
+  })
+})
+</script>
 
 <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
  <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
