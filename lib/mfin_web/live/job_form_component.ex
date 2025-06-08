@@ -12,15 +12,20 @@ defmodule MfinWeb.JobFormComponent do
   def handle_event("save", params, socket) do
     IO.puts("HE SAVE:  #{inspect(params)}")
 
-    Mfin.Egjob.update(
+    {num, _} = Mfin.Egjob.update_opt(
       String.to_integer(params["id"]), 
       Map.delete(params, "id")
     )
-
-    socket = socket
-      |> put_flash(:info, "Saved new info successfully!")
-      #|> push_event("js-exec", %{to: "#jobs-modal", attr: "data-cancel"})
-      |> push_navigate(to: "/jbs", replace: true)
+    socket = case num do
+      1 ->
+        socket
+        |> put_flash(:info, "Saved new info successfully!")
+        #|> push_event("js-exec", %{to: "#jobs-modal", attr: "data-cancel"})
+        |> push_navigate(to: "/jbs", replace: true)
+      _ ->
+        socket
+        |> put_flash(:error, "Not saved!")
+    end
     {:noreply, socket}
   end
   def handle_event(event, params, socket) do

@@ -62,6 +62,11 @@ defmodule Mfin.Egjob do
     changeset(job, params)
     |> Repo.update()
   end 
+  
+  def update_opt(id, params) do
+    from(p in Egjob, where: p.id == ^id, select: p)
+    |> Repo.update_all(set: [name: params["name"], updated_at: DateTime.utc_now()])
+  end 
 
 end
 
