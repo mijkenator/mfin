@@ -18,7 +18,7 @@ defmodule Mfin.Egjob do
     |> cast(params, [:name, :status])
   end
 
-  def create_changeset(egjob, attrs, opts \\ []) do
+  def create_changeset(egjob, attrs, _opts \\ []) do
     egjob
     |> cast(attrs, [:name, :status])
     |> validate_required([:name])

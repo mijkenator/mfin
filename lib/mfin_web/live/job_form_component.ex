@@ -11,22 +11,40 @@ defmodule MfinWeb.JobFormComponent do
   @impl true
   def handle_event("save", params, socket) do
     IO.puts("HE SAVE:  #{inspect(params)}")
-
-    {num, _} = Mfin.Egjob.update_opt(
-      String.to_integer(params["id"]), 
-      Map.delete(params, "id")
-    )
-    socket = case num do
-      1 ->
-        socket
-        |> put_flash(:info, "Saved new info successfully!")
-        #|> push_event("js-exec", %{to: "#jobs-modal", attr: "data-cancel"})
-        |> push_navigate(to: "/jbs", replace: true)
+    
+    case params["id"] do
+      "0" ->
+        case Mfin.Egjob.create_job(Map.delete(params, "id")) do
+          {:ok, _} ->
+            {:noreply, 
+              socket
+                |> put_flash(:info, "New record created!")
+                |> push_navigate(to: "/jbs", replace: true)
+            }
+          err ->
+            IO.puts("Create error: #{inspect(err)} ")
+            {:noreply, 
+              socket
+                |> put_flash(:info, "Not created!")
+            }
+        end
       _ ->
-        socket
-        |> put_flash(:error, "Not saved!")
+        {num, _} = Mfin.Egjob.update_opt(
+          String.to_integer(params["id"]), 
+          Map.delete(params, "id")
+        )
+        socket = case num do
+          1 ->
+            socket
+            |> put_flash(:info, "Saved new info successfully!")
+            #|> push_event("js-exec", %{to: "#jobs-modal", attr: "data-cancel"})
+            |> push_navigate(to: "/jbs", replace: true)
+          _ ->
+            socket
+            |> put_flash(:error, "Not saved!")
+        end
+        {:noreply, socket}
     end
-    {:noreply, socket}
   end
   def handle_event(event, params, socket) do
 
@@ -37,15 +55,22 @@ defmodule MfinWeb.JobFormComponent do
   defp assign_changeset(assigns, socket) do
     IO.puts("AC JFC: #{inspect(assigns)}")
     #changeset = Mfin.Egjob.changeset(%Mfin.Egjob{}, assigns)
-    changeset = Mfin.Egjob.get_job_byid(String.to_integer(assigns[:id]))
-      |> Map.from_struct
-      |> Enum.map(fn {k, v} -> {Atom.to_string(k), v} end) 
-      |> Enum.into(%{}) 
+    changeset = case assigns[:id] do
+      "0" ->
+        %{
+          "id" => 0
+        }
+      bin_id ->
+        Mfin.Egjob.get_job_byid(String.to_integer(bin_id))
+          |> Map.from_struct
+          |> Enum.map(fn {k, v} -> {Atom.to_string(k), v} end) 
+          |> Enum.into(%{}) 
+    end
     
     IO.puts("AC CHANGESET: #{inspect(changeset)}")
     socket
       |> assign(:title, assigns[:title])
-      |> assign(:name, "lalalall-okokok")
+      |> assign(:id, assigns[:id] )
       |> assign(:changeset, changeset)
   end
 

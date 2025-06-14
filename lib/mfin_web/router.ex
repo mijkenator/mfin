@@ -21,7 +21,7 @@ defmodule MfinWeb.Router do
     pipe_through :browser
 
     get "/", PageController, :home
-    live("/jbs", JobsLive)
+    #live("/jbs", JobsLive)
   end
 
   # Other scopes may use custom stacks.
@@ -69,6 +69,7 @@ defmodule MfinWeb.Router do
     get "/users/settings/confirm_email/:token", UserSettingsController, :confirm_email
 
     get "/jobs/list", JobListController, :list
+    live("/jbs", JobsLive)
   end
 
   scope "/", MfinWeb do
