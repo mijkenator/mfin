@@ -1,4 +1,5 @@
 defmodule Mfin.Egjob do
+  require Logger
   use Ecto.Schema
   import Ecto.Changeset
 
@@ -42,6 +43,13 @@ defmodule Mfin.Egjob do
     |> order_by({:asc, :id})
     |> Repo.all()
   end
+  
+  def get_all_jobs(params) do
+    Logger.debug("GAJ: #{inspect(params)}")
+    from(m in Egjob)
+    |> sort(params)
+    |> Repo.all()
+  end
 
   def get_job_byid(id) do
     Ecto.Query.from(j in Egjob, where: j.id == ^id)
@@ -67,6 +75,13 @@ defmodule Mfin.Egjob do
     from(p in Egjob, where: p.id == ^id, select: p)
     |> Repo.update_all(set: [name: params["name"], updated_at: DateTime.utc_now()])
   end 
+
+  defp sort(query,  %{sort_by: sort_by, sort_dir: sort_dir})
+    when sort_by in [:id, :symbol, :quantity, :trade_time, :price] and
+         sort_dir in [:asc, :desc] do
+    order_by(query, {^sort_dir, ^sort_by})
+  end
+  defp sort(query, _opts), do: query
 
 end
 
