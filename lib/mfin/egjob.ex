@@ -47,6 +47,7 @@ defmodule Mfin.Egjob do
   def get_all_jobs(params) do
     Logger.debug("GAJ: #{inspect(params)}")
     from(m in Egjob)
+    |> filter(params)
     |> sort(params)
     |> Repo.all()
   end
@@ -82,6 +83,24 @@ defmodule Mfin.Egjob do
     order_by(query, {^sort_dir, ^sort_by})
   end
   defp sort(query, _opts), do: query
+
+  defp filter(query, opts) do
+     query
+     |> filter_by_name(opts)
+     |> filter_by_id(opts)
+  end
+
+  defp filter_by_name(query, %{name: name})
+      when is_binary(name) and name != "" do
+      query_string = "%#{name}%"
+      where(query, [m], like(m.name, ^query_string))
+  end
+  defp filter_by_name(query, _opts), do: query
+
+  defp filter_by_id(query, %{id: id}) when is_integer(id) do
+      where(query, id: ^id)
+  end
+  defp filter_by_id(query, _opts), do: query
 
 end
 

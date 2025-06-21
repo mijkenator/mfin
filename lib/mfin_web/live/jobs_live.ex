@@ -3,6 +3,7 @@ defmodule MfinWeb.JobsLive do
   use MfinWeb, :live_view
   alias Mfin.Egjob
   alias MfinWeb.Forms.SortingForm
+  alias MfinWeb.Forms.FilterForm
   require Logger
 
   def mount(_params, _session, socket), do: {:ok, socket}
@@ -43,12 +44,19 @@ defmodule MfinWeb.JobsLive do
     Mfin.Egjob.toggle_job(String.to_integer(assigns["id"]))
     {:noreply, assign_jobs(socket)}
   end
+  def handle_event("filter-reset-click", assigns, socket) do
+    path = ~p"/jbs"
+    socket = socket
+      |> reset_filter()
+    {:noreply, push_navigate(socket, to: path, replace: true)}
+  end
 
   defp merge_and_sanitize_params(socket, overrides \\ %{}) do
-      %{sorting: sorting} = socket.assigns
+      %{sorting: sorting, filter: filter} = socket.assigns
 
       %{}
        |> Map.merge(sorting)
+       |> Map.merge(filter)
        |> Map.merge(overrides)
        |> Enum.reject(fn {_key, value} -> is_nil(value) end)
        |> Map.new()
@@ -56,13 +64,16 @@ defmodule MfinWeb.JobsLive do
 
   defp parse_params(socket, params) do
       Logger.debug "PPPPPPPPPPPPPPPP1"
-      with {:ok, sorting_opts} <- SortingForm.parse(params) do
+    with {:ok, sorting_opts} <- SortingForm.parse(params),
+         {:ok, filter_opts} <- FilterForm.parse(params) do
         Logger.debug "PPPPPPPPPPPPPPPP2"
         socket
+        |> assign_filter(filter_opts)
         |> assign_sorting(sorting_opts)
       else
         _error ->
           socket
+          |> assign_filter() 
           |> assign_sorting()
       end
   end
@@ -70,6 +81,14 @@ defmodule MfinWeb.JobsLive do
   defp assign_sorting(socket, overrides \\ %{}) do
     opts = Map.merge(SortingForm.default_values(), overrides)
     assign(socket, :sorting, opts)
+  end
+
+  defp assign_filter(socket, overrides \\ %{}) do
+      assign(socket, :filter, FilterForm.default_values(overrides))
+  end
+
+  defp reset_filter(socket) do
+      assign(socket, :filter, %{})
   end
 
 end
