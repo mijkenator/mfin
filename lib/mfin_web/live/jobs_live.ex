@@ -50,16 +50,27 @@ defmodule MfinWeb.JobsLive do
       |> reset_filter()
     {:noreply, push_navigate(socket, to: path, replace: true)}
   end
+  def handle_event("select_checkbox", assigns, socket) do
+    IO.puts("SC: #{inspect(assigns)}")
+    {:noreply, socket}
+  end
 
   defp merge_and_sanitize_params(socket, overrides \\ %{}) do
-      %{sorting: sorting, filter: filter} = socket.assigns
+     case socket.assigns do 
+       %{sorting: sorting, filter: filter} ->
+          %{}
+           |> Map.merge(sorting)
+           |> Map.merge(filter)
+           |> Map.merge(overrides)
+           |> Enum.reject(fn {_key, value} -> is_nil(value) end)
+           |> Map.new()
+       _ ->
+          %{}
+           |> Map.merge(overrides)
+           |> Enum.reject(fn {_key, value} -> is_nil(value) end)
+           |> Map.new()
 
-      %{}
-       |> Map.merge(sorting)
-       |> Map.merge(filter)
-       |> Map.merge(overrides)
-       |> Enum.reject(fn {_key, value} -> is_nil(value) end)
-       |> Map.new()
+     end
   end
 
   defp parse_params(socket, params) do
