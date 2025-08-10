@@ -59,7 +59,9 @@ defmodule Mfin.MixProject do
       {:gettext, "~> 0.26"},
       {:jason, "~> 1.2"},
       {:dns_cluster, "~> 0.1.1"},
-      {:bandit, "~> 1.5"}
+      {:bandit, "~> 1.5"},
+      {:waffle, "~> 1.0"},
+      {:waffle_ecto, "~> 0.0.12"}
     ]
   end
 

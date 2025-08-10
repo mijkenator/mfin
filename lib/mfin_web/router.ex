@@ -70,6 +70,7 @@ defmodule MfinWeb.Router do
 
     get "/jobs/list", JobListController, :list
     live("/jbs", JobsLive)
+    live("/upload", UploadLive)
   end
 
   scope "/", MfinWeb do
