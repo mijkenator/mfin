@@ -44,7 +44,7 @@ defmodule MfinWeb.JobsLive do
     Mfin.Egjob.toggle_job(String.to_integer(assigns["id"]))
     {:noreply, assign_jobs(socket)}
   end
-  def handle_event("filter-reset-click", assigns, socket) do
+  def handle_event("filter-reset-click", _assigns, socket) do
     path = ~p"/jbs"
     socket = socket
       |> reset_filter()
