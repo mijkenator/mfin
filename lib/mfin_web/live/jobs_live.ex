@@ -6,10 +6,14 @@ defmodule MfinWeb.JobsLive do
   alias MfinWeb.Forms.FilterForm
   require Logger
 
-  def mount(_params, _session, socket), do: {:ok, socket}
+  def mount(_params, _session, socket) do 
+    IO.puts("JLmount: #{inspect(socket.assigns, limit: :infinity, printable_limit: :infinity)}")
+    {:ok, socket}
+  end
   
   def handle_params(params, url, socket) do
     IO.puts("PARAMS: #{inspect(url)}  -> #{inspect(params)}")
+    IO.puts("JLHP: #{inspect(socket.assigns, limit: :infinity, printable_limit: :infinity)}")
     case params["action"] do
       nil ->
         {:noreply,
