@@ -18,6 +18,8 @@ defmodule Mfin.Blog.Document do
   end
 
   def file_changeset(document, attrs) do
+    IO.puts("MBD1: #{inspect(document)}")
+    IO.puts("MBD1: #{inspect(attrs)}")
     document
     |> cast_attachments(attrs, [:file])
     |> validate_required([:file])

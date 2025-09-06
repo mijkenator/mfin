@@ -22,6 +22,15 @@ config :mfin, MfinWeb.Endpoint,
   pubsub_server: Mfin.PubSub,
   live_view: [signing_salt: "c3SNLFMJ"]
 
+config :mfin, Oban,
+  repo: Mfin.Repo,
+  queues: [maintenance: 10],
+  plugins: [
+    {Oban.Plugins.Cron,
+     crontab: [
+       {"*/5 * * * *", Mfin.Workers.CleanupOrphanDocuments}
+     ]}
+  ]
 # Configures the mailer
 #
 # By default it uses the "Local" adapter which stores the emails
@@ -57,6 +66,9 @@ config :tailwind,
 config :logger, :console,
   format: "$time $metadata[$level] $message\n",
   metadata: [:request_id]
+
+config :waffle,
+  storage: Waffle.Storage.Local
 
 # Use Jason for JSON parsing in Phoenix
 config :phoenix, :json_library, Jason

@@ -54,6 +54,7 @@ defmodule MfinWeb.UploadLive do
     |> assign(:page_title, "New Blog Post")
     |> assign(:post, post)
     |> assign(:documents, [])
+    |> assign(:live_action, :new)
     |> assign(:form, to_form(Blog.change_post(post)))
   end
 
@@ -79,7 +80,12 @@ defmodule MfinWeb.UploadLive do
 
   @impl true
   def handle_event("save", %{"post" => post_params}, socket) do
-    save_post(socket, socket.assigns.live_action, post_params)
+    IO.puts("ULHE: #{inspect(socket.assigns, limit: :infinity)}")
+    la = case socket.assigns.live_action do
+      nil -> :new
+      live_action -> live_action
+    end
+    save_post(socket, la, post_params)
   end
 
   @impl true

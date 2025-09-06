@@ -5,6 +5,7 @@ defmodule Mfin.Blog.DocumentFile do
   @versions [:original]
 
   def storage_dir(_version, {_file, document}) do
+    IO.puts("MBDF: #{inspect(document, limit: :infinity)}")
     "uploads/blog_documents/#{document.id}"
   end
 end

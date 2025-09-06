@@ -59,4 +59,29 @@ defmodule Mfin.Blog do
       {:error, _, changeset, _} -> {:error, changeset}
     end
   end
+
+  def list_orphan_documents(opts \\ []) do
+    count = Keyword.get(opts, :count, 30)
+    interval = Keyword.get(opts, :interval, "minute")
+
+    Document
+    |> where([d], is_nil(d.post_id))
+    |> where([d], d.inserted_at < ago(^count, ^interval))
+    |> Repo.all()
+  end
+
+  def delete_orphan_documents(opts \\ []) do
+    orphan_documents = list_orphan_documents(opts)
+    Logger.info("Deleting #{length(orphan_documents)} orphan documents")
+
+    orphan_documents
+    |> Enum.each(fn document ->
+      Logger.info("Deleting orphan document #{document.id}")
+      :ok = DocumentFile.delete({document.file, document})
+      Repo.delete(document)
+    end)
+
+    Logger.info("Deleted #{length(orphan_documents)} orphan documents")
+  end
+
 end
