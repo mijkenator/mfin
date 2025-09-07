@@ -19,7 +19,7 @@ defmodule Mfin.MixProject do
   def application do
     [
       mod: {Mfin.Application, []},
-      extra_applications: [:logger, :runtime_tools, :os_mon]
+      extra_applications: [:logger, :runtime_tools, :os_mon, :oban]
     ]
   end
 
@@ -62,7 +62,8 @@ defmodule Mfin.MixProject do
       {:bandit, "~> 1.5"},
       {:waffle, "~> 1.0"},
       {:waffle_ecto, "~> 0.0.12"},
-      {:oban, "~> 2.19"}
+      {:oban, "~> 2.19"},
+      {:igniter, "~> 0.5", only: [:dev]}
     ]
   end
 

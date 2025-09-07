@@ -24,13 +24,14 @@ config :mfin, MfinWeb.Endpoint,
 
 config :mfin, Oban,
   repo: Mfin.Repo,
-  queues: [maintenance: 10],
+  queues: [default: 10],
   plugins: [
     {Oban.Plugins.Cron,
      crontab: [
        {"*/5 * * * *", Mfin.Workers.CleanupOrphanDocuments}
      ]}
   ]
+
 # Configures the mailer
 #
 # By default it uses the "Local" adapter which stores the emails

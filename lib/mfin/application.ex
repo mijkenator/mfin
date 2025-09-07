@@ -11,6 +11,7 @@ defmodule Mfin.Application do
       MfinWeb.Telemetry,
       Mfin.Repo,
       {DNSCluster, query: Application.get_env(:mfin, :dns_cluster_query) || :ignore},
+      {Oban, Application.fetch_env!(:mfin, Oban)},
       {Phoenix.PubSub, name: Mfin.PubSub},
       # Start the Finch HTTP client for sending emails
       {Finch, name: Mfin.Finch},

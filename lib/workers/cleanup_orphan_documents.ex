@@ -1,5 +1,5 @@
 defmodule Mfin.Workers.CleanupOrphanDocuments do
-  use Oban.Worker, queue: :maintenance
+  use Oban.Worker, queue: :default
   require Logger
 
   alias Mfin.Blog
