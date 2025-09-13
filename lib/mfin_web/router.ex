@@ -2,6 +2,7 @@ defmodule MfinWeb.Router do
   use MfinWeb, :router
 
   import MfinWeb.UserAuth
+  import Oban.Web.Router
 
   pipeline :browser do
     plug :accepts, ["html"]
@@ -22,7 +23,8 @@ defmodule MfinWeb.Router do
 
     get "/", PageController, :home
     #live("/jbs", JobsLive)
-    forward "/oban", Oban.Web.Plug, repo: Mfin.Repo 
+    # forward "/oban", Oban.Web.Plug, repo: MyApp.Repo 
+    oban_dashboard "/oban"
   end
 
   # Other scopes may use custom stacks.
