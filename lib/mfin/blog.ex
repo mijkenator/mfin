@@ -84,4 +84,10 @@ defmodule Mfin.Blog do
     Logger.info("Deleted #{length(orphan_documents)} orphan documents")
   end
 
+  def get_all_posts(params \\ %{}) do
+    from(m in Post)
+    |> order_by({:asc, :id})
+    |> Repo.all()
+  end
+
 end

@@ -1,0 +1,38 @@
+
+<table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+ <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+ <tr>
+ <th scope="col" class="px-6 py-3">
+    ID
+ </th>
+ <th scope="col" class="px-6 py-3"> Title </th>
+ <th scope="col" class="px-6 py-3"> Status </th>
+ <th scope="col" class="px-6 py-3"> Toggle </th>
+ <th scope="col" class="px-6 py-3"> </th>
+ </tr>
+ </thead>
+ <tbody>
+ <%= for post <- @blog do %>
+ <tr class="odd:bg-white odd:dark:bg-gray-900 even:bg-gray-50 even:dark:bg-gray-800 border-b dark:border-gray-700 border-gray-200">
+ <td class="px-6 py-4">
+    <%= post.id %>
+    <input phx-click="select_checkbox" name="selected_ids" type="checkbox" value={post.id}/>
+ </td>
+ <td class="px-6 py-4"><%= post.title %></td>
+ <td class="px-6 py-4">
+ </td>
+ <td class="px-6 py-4">
+ </td>
+ <td class="px-6 py-4">
+ </td>
+ </tr>
+ <% end %>
+ 
+ <tr class="odd:bg-white odd:dark:bg-gray-900 even:bg-gray-50 even:dark:bg-gray-800 border-b dark:border-gray-700 border-gray-200">
+<td colspan="5" class="text-right px-6 py-4">
+</td>
+ </tr>
+ </tbody>
+</table>
+
+

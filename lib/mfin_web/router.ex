@@ -73,6 +73,7 @@ defmodule MfinWeb.Router do
 
     get "/jobs/list", JobListController, :list
     live("/jbs", JobsLive)
+    live("/blog", BlogLive)
     live("/upload", UploadLive)
   end
 
