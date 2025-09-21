@@ -34,5 +34,11 @@ defmodule MfinWeb.BlogLive do
     |> assign(:blog, Blog.get_all_posts(params))
   end
   
+  def handle_event("toggle-activeness", assigns, socket) do
+    IO.puts("POST TOGGLE: #{inspect(assigns)}")
+    Blog.toggle_post_status(String.to_integer(assigns["id"]))
+    {:noreply, assign_blog(socket)}
+  end
+  
 end
 

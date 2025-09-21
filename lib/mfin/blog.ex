@@ -90,4 +90,13 @@ defmodule Mfin.Blog do
     |> Repo.all()
   end
 
+  def toggle_post_status(id) do
+    post = get_post!(id)
+    Post.changeset(post, %{status: toggle_status(post.status)})
+    |> Repo.update()
+  end
+
+  defp toggle_status(0), do: 1
+  defp toggle_status(_), do: 0
+
 end

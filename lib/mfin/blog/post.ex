@@ -5,6 +5,7 @@ defmodule Mfin.Blog.Post do
   schema "blog_posts" do
     field :title, :string
     field :content, :string
+    field :status, :integer
 
     has_many :documents, Mfin.Blog.Document,
       on_replace: :delete,
