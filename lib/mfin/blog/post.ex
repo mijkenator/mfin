@@ -19,7 +19,7 @@ defmodule Mfin.Blog.Post do
 
   def changeset(post, attrs, documents \\ nil) do
     post
-    |> cast(attrs, [:title, :content])
+    |> cast(attrs, [:title, :content, :status])
     |> validate_required([:title, :content])
     |> maybe_put_documents(documents)
   end
