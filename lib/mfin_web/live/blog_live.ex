@@ -11,7 +11,7 @@ defmodule MfinWeb.BlogLive do
   
   def handle_params(params, url, socket) do
     IO.puts("PARAMS: #{inspect(url)}  -> #{inspect(params)}")
-    IO.puts("JLHP: #{inspect(socket.assigns, limit: :infinity, printable_limit: :infinity)}")
+    IO.puts("BLHP: #{inspect(socket.assigns, limit: :infinity, printable_limit: :infinity)}")
     case params["action"] do
       nil ->
         {:noreply,
@@ -22,7 +22,7 @@ defmodule MfinWeb.BlogLive do
       action ->  
         socket = socket
         |> assign(:live_action, action)
-        |> assign(:job_id, params["id"])
+        |> assign(:post_id, params["id"])
         |> assign(:changeset, Mfin.Egjob.get_job_byid(String.to_integer(params["id"])))
         {:noreply, assign_blog(socket)}
     end

@@ -1,3 +1,18 @@
+<.modal
+  :if={@live_action in ["new", "edit"]}
+  id="jobs-modal"
+  show
+  on_cancel={JS.navigate(~p"/blog")}
+>
+<.live_component
+    module={MfinWeb.BlogFormComponent}
+    id={@post_id || :new}
+    action={@live_action}
+    patch={~p"/blog"}
+    title="KOKOLALA"
+    return_to={~p"/blog"}
+  />
+</.modal>
 
 <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
  <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
