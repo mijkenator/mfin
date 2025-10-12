@@ -1,4 +1,6 @@
 <div>
+
+
 <.form for={@form} phx-change="validate" phx-submit="save">
   <.input field={@form[:title]} type="text" label="Title" required />
   <.input field={@form[:content]} type="textarea" label="Content" required />
@@ -53,4 +55,5 @@
     <button type="submit">Save</button>
   </div>
 </.form>
+
 </div>
