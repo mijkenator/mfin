@@ -20,28 +20,33 @@ defmodule MfinWeb.BlogFormComponent do
     IO.puts("AC PFC: #{inspect(assigns)}")
     
     #current_user = socket.assigns.current_user
-    #IO.puts("ULAAN: #{inspect(current_user, limit: :infinity)}")
+    #IO.puts("BFC current user:: #{inspect(current_user, limit: :infinity)}")
 
-    post = %Post{
-      #author_id: current_user.id,
-      author_id: 1,
-      title: "new title",
-      content: "new contrwnt",
-      documents: []
-    }
     ##changeset = Mfin.Egjob.changeset(%Mfin.Egjob{}, assigns)
-    #changeset = case assigns[:id] do
-    #  "0" ->
-    #    %{
-    #      "id" => 0
-    #    }
-    #  bin_id ->
-    #    Mfin.Egjob.get_job_byid(String.to_integer(bin_id))
-    #      |> Map.from_struct
-    #      |> Enum.map(fn {k, v} -> {Atom.to_string(k), v} end) 
-    #      |> Enum.into(%{}) 
-    #end
-    changeset = %{ "id" => 0}
+    {changeset, post} = case assigns[:id] do
+      "0" ->
+        {
+          %{
+            "id" => 0
+          },
+          post = %Post{
+            #author_id: current_user.id,
+            author_id: 1,
+            title: "new title",
+            content: "new contrwnt",
+            documents: []
+          }
+        }
+      bin_id ->
+        tmp_post = Mfin.Blog.get_post!(String.to_integer(bin_id))
+        {
+          tmp_post
+          |> Map.from_struct
+          |> Enum.map(fn {k, v} -> {Atom.to_string(k), v} end) 
+          |> Enum.into(%{}),
+          tmp_post
+        }
+    end
     IO.puts("AC CHANGESET: #{inspect(changeset)}")
     mform = to_form(Blog.change_post(post))
     IO.puts("BFC FORM: #{inspect(mform, limit: :infinity)}")

@@ -2,11 +2,21 @@ defmodule MfinWeb.BlogLive do
   
   use MfinWeb, :live_view
   alias Mfin.Blog
+  alias Mfin.Accounts
   require Logger
 
-  def mount(_params, _session, socket) do 
+  def mount(_params, session, socket) do 
     IO.puts("BLmount: #{inspect(socket.assigns, limit: :infinity, printable_limit: :infinity)}")
-    {:ok, socket}
+    {:ok, 
+      socket
+      |> assign_new(:current_user, fn ->
+          if user_token = session["user_token"] do
+            Accounts.get_user_by_session_token(user_token)
+          else
+            nil
+           end
+     end)
+    }
   end
   
   def handle_params(params, url, socket) do
