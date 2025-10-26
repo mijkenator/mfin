@@ -56,7 +56,7 @@ defmodule MfinWeb.BlogFormComponent do
       |> assign(:changeset, changeset)
       |> assign(:post, post)
       |> assign(:form, mform)
-      |> assign(:documents, [])
+      |> assign(:documents, post.documents)
       |> allow_upload(:document,
        accept: ~w(.pdf .jpg .png),
        max_entries: 5,

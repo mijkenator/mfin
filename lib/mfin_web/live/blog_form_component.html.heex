@@ -39,16 +39,30 @@
     </div>
 
     <h3>Uploaded Files</h3>
+    <div class="relative overflow-x-auto">
+    <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+    <tbody>
     <%= for document <- @documents do %>
-      <div>{document.file.file_name}</div>
-      <button
-          type="button"
-          phx-click="delete-document"
-          phx-value-id={document.id}
-        >
-        Delete document
-      </button>
+    <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200">
+        <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+            {document.file.file_name}
+        </th>
+        <td class="px-6 py-4">
+              <button
+                  class="text-white bg-blue-700 hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 font-medium rounded-full text-sm px-5 py-2.5 text-center me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+                  type="button"
+                  phx-click="delete-document"
+                  phx-value-id={document.id}
+                >
+                Delete document
+              </button>
+        </td>
+    </tr>
     <% end %>
+    </tbody>
+    </table>
+    </div>
+
   </div>
 
   <div class="">
