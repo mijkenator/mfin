@@ -15,7 +15,14 @@ defmodule MfinWeb.BlogLive do
           else
             nil
            end
-     end)
+      end)
+       |> allow_upload(:document,
+         accept: ~w(.pdf .jpg .png),
+         max_entries: 5,
+         max_file_size: 10_000_000,
+         auto_upload: true,
+         progress: &handle_progress/3
+       )
     }
   end
   
@@ -34,6 +41,22 @@ defmodule MfinWeb.BlogLive do
           socket
           #|> parse_params(params)
           |> assign_blog()
+        }
+      "new" ->
+        post = %Blog.Post{
+          #author_id: current_user.id,
+          author_id: 1,
+          documents: []
+        }
+
+        {:noreply,
+          socket
+          |> assign(:live_action, "new")
+          |> assign(:page_title, "New Blog Post")
+          |> assign(:post, post)
+          |> assign(:documents, [])
+          |> assign(:post_id, "0")
+          |> assign(:form, to_form(Blog.change_post(post)))
         }
       action ->  
         post = Blog.get_post!( params["id"])
@@ -108,6 +131,51 @@ defmodule MfinWeb.BlogLive do
 
       {:error, %Ecto.Changeset{} = changeset} ->
         {:noreply, assign(socket, form: to_form(changeset))}
+    end
+  end
+  
+  defp save_post(socket, "new", post_params) do
+    current_user = socket.assigns.current_user
+
+    case Blog.create_post(
+           post_params,
+           socket.assigns.documents,
+           current_user
+         ) do
+      {:ok, post} ->
+        {:noreply,
+         socket
+         |> put_flash(:info, "Post created successfully")
+         |> push_navigate(to: ~p"/blog")}
+
+      {:error, %Ecto.Changeset{} = changeset} ->
+        {:noreply, assign(socket, form: to_form(changeset))}
+    end
+  end
+  
+  defp handle_progress(:document, entry, socket) do
+    if entry.done? do
+      Logger.debug("Upload finished")
+
+      document =
+        consume_uploaded_entry(socket, entry, fn %{path: path} ->
+          upload = %Plug.Upload{
+            content_type: entry.client_type,
+            filename: entry.client_name,
+            path: path
+          }
+
+          {:ok, document} =
+            Blog.create_unattached_document(%{"file" => upload}, socket.assigns.current_user)
+
+          document
+        end)
+
+      {:noreply,
+       socket
+       |> update(:documents, &(&1 ++ [document]))}
+    else
+      {:noreply, socket}
     end
   end
   
