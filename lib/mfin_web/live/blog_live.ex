@@ -58,6 +58,13 @@ defmodule MfinWeb.BlogLive do
           |> assign(:post_id, "0")
           |> assign(:form, to_form(Blog.change_post(post)))
         }
+      "delete" ->
+        IO.puts("delete post: #{inspect(params["id"])}")
+        Blog.delete_post_byid(params["id"])
+        {:noreply,
+          socket
+          |> push_navigate(to: ~p"/blog")
+        }
       action ->  
         post = Blog.get_post!( params["id"])
         IO.puts("DOCUMENTS: #{inspect(post.documents)}")
@@ -115,6 +122,11 @@ defmodule MfinWeb.BlogLive do
     IO.puts("POST TOGGLE: #{inspect(assigns)}")
     Blog.toggle_post_status(String.to_integer(assigns["id"]))
     {:noreply, assign_blog(socket)}
+  end
+  
+  def handle_event("select_checkbox", assigns, socket) do
+    IO.puts("SC: #{inspect(assigns)}")
+    {:noreply, socket}
   end
   
   defp save_post(socket, "edit", post_params) do

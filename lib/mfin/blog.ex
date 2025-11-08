@@ -16,6 +16,12 @@ defmodule Mfin.Blog do
   def preload_associations(post_or_posts, preloads \\ [:documents]) do
     Repo.preload(post_or_posts, preloads)
   end
+  
+  def delete_post_byid(id) when is_binary(id), do: delete_post_byid(String.to_integer(id))
+  def delete_post_byid(id) when is_integer(id) do
+    %Post{id: id} 
+    |> Repo.delete
+  end
 
   def create_post(attrs, documents, %{id: author_id}) do
     %Post{author_id: author_id}
