@@ -23,6 +23,11 @@ defmodule Mfin.Blog do
     |> Repo.delete
   end
 
+  def delete_posts(pids) do
+    from(record in Post, where: record.id in ^pids)
+    |> Repo.delete_all
+  end
+
   def create_post(attrs, documents, %{id: author_id}) do
     %Post{author_id: author_id}
     |> Post.changeset(attrs, documents)

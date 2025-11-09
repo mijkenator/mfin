@@ -7,6 +7,7 @@ defmodule MfinWeb.BlogLive do
 
   def mount(_params, session, socket) do 
     IO.puts("BLmount: #{inspect(socket.assigns, limit: :infinity, printable_limit: :infinity)}")
+    #sp = Map.get(socket.assigns, :selected_posts, [])
     {:ok, 
       socket
       |> assign_new(:current_user, fn ->
@@ -16,6 +17,7 @@ defmodule MfinWeb.BlogLive do
             nil
            end
       end)
+      # |> assign(:selected_posts, sp)
        |> allow_upload(:document,
          accept: ~w(.pdf .jpg .png),
          max_entries: 5,
@@ -65,6 +67,8 @@ defmodule MfinWeb.BlogLive do
           socket
           |> push_navigate(to: ~p"/blog")
         }
+      "delete_selected" ->
+        delete_selected(params, socket)
       action ->  
         post = Blog.get_post!( params["id"])
         IO.puts("DOCUMENTS: #{inspect(post.documents)}")
@@ -124,11 +128,29 @@ defmodule MfinWeb.BlogLive do
     {:noreply, assign_blog(socket)}
   end
   
-  def handle_event("select_checkbox", assigns, socket) do
-    IO.puts("SC: #{inspect(assigns)}")
-    {:noreply, socket}
+  def handle_event("select_checkbox", %{"id" => id, "value" => _value}, socket) do
+    sassigns = Map.get(socket.assigns, :selected_posts, [])
+    {:noreply, assign(socket, :selected_posts, 
+      Enum.uniq([id | sassigns]))}
   end
-  
+  def handle_event("select_checkbox", %{"id" => id}, socket) do
+    sassigns = List.delete(
+      Map.get(socket.assigns, :selected_posts, []),
+      id)
+
+    {:noreply, assign(socket, :selected_posts, sassigns)}
+  end
+
+  defp delete_selected(params, socket) do
+    sp = for pid <- Map.get(socket.assigns, :selected_posts, []), do: String.to_integer(pid)
+    IO.puts("delete selected: #{inspect(sp)}")
+    Blog.delete_posts(sp)  
+    {:noreply,
+      socket
+      |> push_navigate(to: ~p"/blog")
+    }
+  end
+
   defp save_post(socket, "edit", post_params) do
     case Blog.update_post(
            socket.assigns.post,
