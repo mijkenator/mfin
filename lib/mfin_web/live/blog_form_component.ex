@@ -3,6 +3,7 @@ defmodule MfinWeb.BlogFormComponent do
   
   alias Mfin.Blog
   alias Mfin.Blog.Post
+  require Logger
 
   @impl true
   def update(assigns, socket) do
@@ -18,9 +19,8 @@ defmodule MfinWeb.BlogFormComponent do
 
   defp assign_changeset(assigns, socket) do
     IO.puts("AC PFC: #{inspect(assigns)}")
-    
-    #current_user = socket.assigns.current_user
-    #IO.puts("BFC current user:: #{inspect(current_user, limit: :infinity)}")
+    current_user = assigns.current_user
+    IO.puts("BFC current user:: #{inspect(current_user, limit: :infinity)}")
 
     ##changeset = Mfin.Egjob.changeset(%Mfin.Egjob{}, assigns)
     {changeset, post} = case assigns[:id] do
@@ -30,8 +30,7 @@ defmodule MfinWeb.BlogFormComponent do
             "id" => 0
           },
           post = %Post{
-            #author_id: current_user.id,
-            author_id: 1,
+            author_id: current_user.id,
             title: "new title",
             content: "new contrwnt",
             documents: []
@@ -57,6 +56,7 @@ defmodule MfinWeb.BlogFormComponent do
       |> assign(:post, post)
       |> assign(:form, mform)
       |> assign(:documents, post.documents)
+      |> assign(:current_user, current_user)
       |> allow_upload(:document,
        accept: ~w(.pdf .jpg .png),
        max_entries: 5,
@@ -75,6 +75,17 @@ defmodule MfinWeb.BlogFormComponent do
   def handle_event(event, params, socket) do
     IO.puts("BFC EVENT:#{inspect(event)}  #{inspect(params)}")
     {:noreply, socket}
+  end
+
+  @impl true
+  def handle_event("validate", %{"post" => post_params}, socket) do
+    IO.puts("BFC VALIDATE EVENT: #{inspect(post_params)}")
+    changeset =
+      Blog.change_post(socket.assigns.post, post_params)
+
+    {:noreply,
+     socket
+     |> assign(form: to_form(changeset, action: :validate))}
   end
   
   defp handle_progress(:document, entry, socket) do

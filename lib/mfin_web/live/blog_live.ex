@@ -17,14 +17,14 @@ defmodule MfinWeb.BlogLive do
             nil
            end
       end)
-      # |> assign(:selected_posts, sp)
-       |> allow_upload(:document,
-         accept: ~w(.pdf .jpg .png),
-         max_entries: 5,
-         max_file_size: 10_000_000,
-         auto_upload: true,
-         progress: &handle_progress/3
-       )
+       #|> assign(:selected_posts, sp)
+      # |> allow_upload(:document,
+      #   accept: ~w(.pdf .jpg .png),
+      #   max_entries: 5,
+      #   max_file_size: 10_000_000,
+      #   auto_upload: true,
+      #   progress: &handle_progress/3
+      # )
     }
   end
   
