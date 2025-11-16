@@ -109,19 +109,6 @@ defmodule MfinWeb.BlogLive do
     save_post(socket, la, post_params)
   end
 
-  @impl true
-  def handle_event("delete-document", %{"id" => document_id}, socket) do
-    post = socket.assigns.post
-    documents = socket.assigns.documents
-
-    document_to_delete = Blog.get_document!(document_id)
-
-    # Remove from documents list
-    documents = Enum.reject(documents, &(&1.id == document_to_delete.id))
-
-    {:noreply, assign(socket, :documents, documents)}
-  end
-
   def handle_event("toggle-activeness", assigns, socket) do
     IO.puts("POST TOGGLE: #{inspect(assigns)}")
     Blog.toggle_post_status(String.to_integer(assigns["id"]))

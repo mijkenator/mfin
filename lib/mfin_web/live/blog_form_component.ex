@@ -11,11 +11,6 @@ defmodule MfinWeb.BlogFormComponent do
     {:ok, assign_changeset(assigns, socket)}
   end
 
-  def handle_event(event, params, socket) do
-
-    IO.puts("HE BFC: #{inspect(event)} -> #{inspect(params)}")
-    {:noreply, socket}
-  end
 
   defp assign_changeset(assigns, socket) do
     IO.puts("AC PFC: #{inspect(assigns)}")
@@ -70,13 +65,6 @@ defmodule MfinWeb.BlogFormComponent do
   defp error_to_string(:not_accepted), do: "Unacceptable file type (PDF, JPG, PNG only)"
   defp error_to_string(:too_many_files), do: "Too many files selected"
 
-
-  @impl true
-  def handle_event(event, params, socket) do
-    IO.puts("BFC EVENT:#{inspect(event)}  #{inspect(params)}")
-    {:noreply, socket}
-  end
-
   @impl true
   def handle_event("validate", %{"post" => post_params}, socket) do
     IO.puts("BFC VALIDATE EVENT: #{inspect(post_params)}")
@@ -86,6 +74,35 @@ defmodule MfinWeb.BlogFormComponent do
     {:noreply,
      socket
      |> assign(form: to_form(changeset, action: :validate))}
+  end
+  
+  @impl true
+  def handle_event("delete-document", %{"id" => document_id}, socket) do
+    post = socket.assigns.post
+    documents = socket.assigns.documents
+
+    document_to_delete = Blog.get_document!(document_id)
+
+    # Remove from documents list
+    documents = Enum.reject(documents, &(&1.id == document_to_delete.id))
+
+    {:noreply, assign(socket, :documents, documents)}
+  end
+  
+  @impl true
+  def handle_event("save", %{"post" => post_params}, socket) do
+    IO.puts("BLHE: #{inspect(socket.assigns, limit: :infinity)}")
+    IO.puts("BLHE PostID: #{inspect(socket.assigns.post.id, limit: :infinity)}")
+    la = case socket.assigns.post.id do
+      nil -> :new
+      live_action -> :edit
+    end
+    save_post(socket, la, post_params)
+  end
+  
+  def handle_event(event, params, socket) do
+    IO.puts("HE BFC DEFAULT: #{inspect(event)} -> #{inspect(params)}")
+    {:noreply, socket}
   end
   
   defp handle_progress(:document, entry, socket) do
@@ -111,6 +128,42 @@ defmodule MfinWeb.BlogFormComponent do
        |> update(:documents, &(&1 ++ [document]))}
     else
       {:noreply, socket}
+    end
+  end
+  
+  defp save_post(socket, :edit, post_params) do
+    case Blog.update_post(
+           socket.assigns.post,
+           post_params,
+           socket.assigns.documents
+         ) do
+      {:ok, post} ->
+        {:noreply,
+         socket
+         |> put_flash(:info, "Post updated successfully")
+         |> push_navigate(to: ~p"/blog")}
+
+      {:error, %Ecto.Changeset{} = changeset} ->
+        {:noreply, assign(socket, form: to_form(changeset))}
+    end
+  end
+  
+  defp save_post(socket, :new, post_params) do
+    current_user = socket.assigns.current_user
+
+    case Blog.create_post(
+           post_params,
+           socket.assigns.documents,
+           current_user
+         ) do
+      {:ok, post} ->
+        {:noreply,
+         socket
+         |> put_flash(:info, "Post created successfully")
+         |> push_navigate(to: ~p"/blog")}
+
+      {:error, %Ecto.Changeset{} = changeset} ->
+        {:noreply, assign(socket, form: to_form(changeset))}
     end
   end
 
