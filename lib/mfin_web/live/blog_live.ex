@@ -88,27 +88,6 @@ defmodule MfinWeb.BlogLive do
     |> assign(:blog, Blog.get_all_posts(params))
   end
   
-  @impl true
-  def handle_event("validate", %{"post" => post_params}, socket) do
-    changeset =
-      Blog.change_post(socket.assigns.post, post_params)
-
-    {:noreply,
-     socket
-     |> assign(form: to_form(changeset, action: :validate))}
-  end
-  
-  @impl true
-  def handle_event("save", %{"post" => post_params}, socket) do
-    IO.puts("BLHE: #{inspect(socket.assigns, limit: :infinity)}")
-    IO.puts("BLHE LiveAction: #{inspect(socket.assigns.live_action, limit: :infinity)}")
-    la = case socket.assigns.live_action do
-      nil -> :new
-      live_action -> live_action
-    end
-    save_post(socket, la, post_params)
-  end
-
   def handle_event("toggle-activeness", assigns, socket) do
     IO.puts("POST TOGGLE: #{inspect(assigns)}")
     Blog.toggle_post_status(String.to_integer(assigns["id"]))
@@ -138,42 +117,6 @@ defmodule MfinWeb.BlogLive do
     }
   end
 
-  defp save_post(socket, "edit", post_params) do
-    case Blog.update_post(
-           socket.assigns.post,
-           post_params,
-           socket.assigns.documents
-         ) do
-      {:ok, post} ->
-        {:noreply,
-         socket
-         |> put_flash(:info, "Post updated successfully")
-         |> push_navigate(to: ~p"/blog")}
-
-      {:error, %Ecto.Changeset{} = changeset} ->
-        {:noreply, assign(socket, form: to_form(changeset))}
-    end
-  end
-  
-  defp save_post(socket, "new", post_params) do
-    current_user = socket.assigns.current_user
-
-    case Blog.create_post(
-           post_params,
-           socket.assigns.documents,
-           current_user
-         ) do
-      {:ok, post} ->
-        {:noreply,
-         socket
-         |> put_flash(:info, "Post created successfully")
-         |> push_navigate(to: ~p"/blog")}
-
-      {:error, %Ecto.Changeset{} = changeset} ->
-        {:noreply, assign(socket, form: to_form(changeset))}
-    end
-  end
-  
   defp handle_progress(:document, entry, socket) do
     if entry.done? do
       Logger.debug("Upload finished")

@@ -91,8 +91,8 @@ defmodule MfinWeb.BlogFormComponent do
   
   @impl true
   def handle_event("save", %{"post" => post_params}, socket) do
-    IO.puts("BLHE: #{inspect(socket.assigns, limit: :infinity)}")
-    IO.puts("BLHE PostID: #{inspect(socket.assigns.post.id, limit: :infinity)}")
+    IO.puts("Component BLHE: #{inspect(socket.assigns, limit: :infinity)}")
+    IO.puts("Component BLHE PostID: #{inspect(socket.assigns.post.id, limit: :infinity)}")
     la = case socket.assigns.post.id do
       nil -> :new
       live_action -> :edit
