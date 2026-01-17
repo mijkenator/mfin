@@ -29,49 +29,54 @@ defmodule MfinWeb.BlogLive do
       live_action -> live_action
     end
 
-    case params["action"] do
-      nil ->
-        {:noreply,
-          socket
-          #|> parse_params(params)
-          |> assign_blog()
-        }
-      "new" ->
-        post = %Blog.Post{
-          #author_id: current_user.id,
-          author_id: 1,
-          documents: []
-        }
+    blog_action(params["action"], socket, params)
+  end
 
-        {:noreply,
-          socket
-          |> assign(:live_action, "new")
-          |> assign(:page_title, "New Blog Post")
-          |> assign(:post, post)
-          |> assign(:documents, [])
-          |> assign(:post_id, "0")
-          |> assign(:form, to_form(Blog.change_post(post)))
-        }
-      "delete" ->
-        IO.puts("delete post: #{inspect(params["id"])}")
-        Blog.delete_post_byid(params["id"])
-        {:noreply,
-          socket
-          |> push_navigate(to: ~p"/blog")
-        }
-      "delete_selected" ->
-        delete_selected(params, socket)
-      action ->  
-        post = Blog.get_post!( params["id"])
-        IO.puts("DOCUMENTS: #{inspect(post.documents)}")
-        socket = socket
-        |> assign(:live_action, action)
-        |> assign(:post_id, params["id"])
-        |> assign(:post, post)
-        |> assign(:documents, post.documents)
-        |> assign(:changeset, Mfin.Egjob.get_job_byid(String.to_integer(params["id"])))
-        {:noreply, assign_blog(socket)}
-    end
+  def blog_action(nil, socket, _) do
+    {:noreply,
+      socket
+      #|> parse_params(params)
+      |> assign_blog()
+    }
+  end
+  def blog_action("new", socket, _) do
+    current_user = socket.assigns.current_user
+    post = %Blog.Post{
+      author_id: current_user.id,
+      documents: []
+    }
+
+    {:noreply,
+      socket
+      |> assign(:live_action, "new")
+      |> assign(:page_title, "New Blog Post")
+      |> assign(:post, post)
+      |> assign(:documents, [])
+      |> assign(:post_id, "0")
+      |> assign(:form, to_form(Blog.change_post(post)))
+    }
+  end
+  def blog_action("delete", socket, params) do
+    IO.puts("delete post: #{inspect(params["id"])}")
+    Blog.delete_post_byid(params["id"])
+    {:noreply,
+      socket
+      |> push_navigate(to: ~p"/blog")
+    }
+  end
+  def blog_action("delete_selected", socket, params) do
+    delete_selected(params, socket)
+  end
+  def blog_action(action, socket, params) do
+    post = Blog.get_post!( params["id"])
+    IO.puts("DOCUMENTS: #{inspect(post.documents)}")
+    socket = socket
+    |> assign(:live_action, action)
+    |> assign(:post_id, params["id"])
+    |> assign(:post, post)
+    |> assign(:documents, post.documents)
+    |> assign(:changeset, Mfin.Egjob.get_job_byid(String.to_integer(params["id"])))
+    {:noreply, assign_blog(socket)}
   end
 
   defp assign_blog(socket) do
