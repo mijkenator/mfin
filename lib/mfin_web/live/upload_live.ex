@@ -90,7 +90,7 @@ defmodule MfinWeb.UploadLive do
 
   @impl true
   def handle_event("delete-document", %{"id" => document_id}, socket) do
-    post = socket.assigns.post
+    _post = socket.assigns.post
     documents = socket.assigns.documents
 
     document_to_delete = Blog.get_document!(document_id)

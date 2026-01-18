@@ -24,10 +24,10 @@ defmodule MfinWeb.BlogLive do
     IO.puts("PARAMS: #{inspect(url)}  -> #{inspect(params)}")
     IO.puts("BLHP: #{inspect(socket.assigns, limit: :infinity, printable_limit: :infinity)}")
 
-    la = case socket.assigns.live_action do
-      nil -> :new
-      live_action -> live_action
-    end
+    #la = case socket.assigns.live_action do
+    #  nil -> :new
+    #  live_action -> live_action
+    #end
 
     blog_action(params["action"], socket, params)
   end
@@ -104,7 +104,7 @@ defmodule MfinWeb.BlogLive do
     {:noreply, assign(socket, :selected_posts, sassigns)}
   end
 
-  defp delete_selected(params, socket) do
+  defp delete_selected(_params, socket) do
     sp = for pid <- Map.get(socket.assigns, :selected_posts, []), do: String.to_integer(pid)
     IO.puts("delete selected: #{inspect(sp)}")
     Blog.delete_posts(sp)  

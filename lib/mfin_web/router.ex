@@ -75,6 +75,7 @@ defmodule MfinWeb.Router do
     live("/jbs", JobsLive)
     live("/blog", BlogLive)
     live("/upload", UploadLive)
+    get "/blog/post/:post_id", BlogController, :view
   end
 
   scope "/", MfinWeb do

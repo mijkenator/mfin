@@ -24,7 +24,7 @@ defmodule MfinWeb.BlogFormComponent do
           %{
             "id" => 0
           },
-          post = %Post{
+          %Post{
             author_id: current_user.id,
             title: "new title",
             content: "new contrwnt",
@@ -78,7 +78,7 @@ defmodule MfinWeb.BlogFormComponent do
   
   @impl true
   def handle_event("delete-document", %{"id" => document_id}, socket) do
-    post = socket.assigns.post
+    _post = socket.assigns.post
     documents = socket.assigns.documents
 
     document_to_delete = Blog.get_document!(document_id)
@@ -95,7 +95,7 @@ defmodule MfinWeb.BlogFormComponent do
     IO.puts("Component BLHE PostID: #{inspect(socket.assigns.post.id, limit: :infinity)}")
     la = case socket.assigns.post.id do
       nil -> :new
-      live_action -> :edit
+      _live_action -> :edit
     end
     save_post(socket, la, post_params)
   end
@@ -137,7 +137,7 @@ defmodule MfinWeb.BlogFormComponent do
            post_params,
            socket.assigns.documents
          ) do
-      {:ok, post} ->
+      {:ok, _post} ->
         {:noreply,
          socket
          |> put_flash(:info, "Post updated successfully")
@@ -156,7 +156,7 @@ defmodule MfinWeb.BlogFormComponent do
            socket.assigns.documents,
            current_user
          ) do
-      {:ok, post} ->
+      {:ok, _post} ->
         {:noreply,
          socket
          |> put_flash(:info, "Post created successfully")
