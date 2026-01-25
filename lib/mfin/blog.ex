@@ -7,10 +7,12 @@ defmodule Mfin.Blog do
   require Logger
 
   # Basic Post CRUD operations
+  def get_post!(id) when is_binary(id), do: get_post!(String.to_integer(id))
   def get_post!(id) do
     Post
     |> Repo.get!(id)
     |> preload_associations([:documents])
+    |> preload_associations([:author])
   end
 
   def preload_associations(post_or_posts, preloads \\ [:documents]) do

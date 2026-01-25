@@ -1,7 +1,51 @@
 <.flash_group flash={@flash} />
 
 <%= if @current_user do %>
-sasasdasd 1111
+    
+<div class="relative overflow-x-auto bg-neutral-primary-soft shadow-xs rounded-base border border-default">
+    <table class="w-full text-sm text-left rtl:text-right text-body">
+        <tbody>
+            <tr class="bg-neutral-primary border-b border-default">
+                <td class="px-6 py-4">
+                     Author ID: {@post.author.id} <br/>
+                     Author Email: {@post.author.email}
+                </td>
+            </tr>
+            <tr class="bg-neutral-primary border-b border-default">
+                <td class="px-6 py-4">
+                    {@post.title}
+                </td>
+            </tr>
+            <tr class="bg-neutral-primary border-b border-default">
+                <td class="px-6 py-4">
+                    {@post.content}
+                </td>
+            </tr>
+            <tr class="bg-neutral-primary border-b border-default">
+                <td class="px-6 py-4">
+                    <%= if @post.documents == [] do %>
+                        No attached documents:
+                    <% else %>
+                        Documents 
+                    <% end %>
+                </td>
+            </tr>
+            <tr class="bg-neutral-primary border-b border-default">
+                <td class="px-6 py-4">
+                    Status: 
+                    <%= if @post.status == 0 do %>
+                        Inactive
+                    <% else %>
+                        Active
+                    <% end %> <br>
+                    Inserted data: {@post.inserted_at} <br>
+                    Last update: {@post.updated_at}
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
 <% else %>
 gfgghfghghfgh 22222
 <% end %>
