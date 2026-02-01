@@ -64,7 +64,8 @@ defmodule Mfin.MixProject do
       {:waffle_ecto, "~> 0.0.12"},
       {:oban, "~> 2.19"},
       {:igniter, "~> 0.5", only: [:dev]},
-      {:oban_web, "~> 2.11"}
+      {:oban_web, "~> 2.11"},
+      {:file_type, "~> 0.1.0"}
     ]
   end
 

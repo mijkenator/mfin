@@ -26,7 +26,14 @@
                     <%= if @post.documents == [] do %>
                         No attached documents:
                     <% else %>
-                        Documents 
+                        Attached documents:
+                        <ul class="list-disc">
+                            <%= for entry <- @post.documents do %>
+                            <li>
+                                <a href={~p"/blog/attachment/#{@post.id}/#{entry.id}/#{entry.file.file_name}"}> {entry.file.file_name} </a>
+                            </li>
+                            <% end %>
+                        </ul>
                     <% end %>
                 </td>
             </tr>
