@@ -53,7 +53,7 @@ defmodule MfinWeb.BlogFormComponent do
       |> assign(:documents, post.documents)
       |> assign(:current_user, current_user)
       |> allow_upload(:document,
-       accept: ~w(.pdf .jpg .png),
+       accept: ~w(.pdf .jpg .png .heic),
        max_entries: 5,
        max_file_size: 10_000_000,
        auto_upload: true,

@@ -18,7 +18,8 @@ defmodule Mfin.Application do
       # Start a worker by calling: Mfin.Worker.start_link(arg)
       # {Mfin.Worker, arg},
       # Start to serve requests, typically the last entry
-      MfinWeb.Endpoint
+      MfinWeb.Endpoint,
+      { Thumbnailer, name: Thumbnailer}
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html

@@ -40,6 +40,7 @@ defmodule Mfin.Blog do
     post
     |> Post.changeset(attrs, documents)
     |> Repo.update()
+    |> Mfin.Workers.ThumbnailJobs.set_job(documents)
   end
 
   def change_post(%Post{} = post, attrs \\ %{}) do

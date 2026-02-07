@@ -24,7 +24,7 @@ config :mfin, MfinWeb.Endpoint,
 
 config :mfin, Oban,
   repo: Mfin.Repo,
-  queues: [default: 10],
+  queues: [default: 10, thumbnails: 5],
   plugins: [
     {Oban.Plugins.Cron,
      crontab: [

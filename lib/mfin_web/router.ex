@@ -77,6 +77,7 @@ defmodule MfinWeb.Router do
     live("/upload", UploadLive)
     get "/blog/post/:post_id", BlogController, :view
     get "/blog/attachment/:post_id/:attachment_id/:file_name", BlogController, :attachment
+    get "/blog/attachment_preview/:post_id/:attachment_id/:file_name", BlogController, :attachment_preview
   end
 
   scope "/", MfinWeb do

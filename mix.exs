@@ -65,7 +65,8 @@ defmodule Mfin.MixProject do
       {:oban, "~> 2.19"},
       {:igniter, "~> 0.5", only: [:dev]},
       {:oban_web, "~> 2.11"},
-      {:file_type, "~> 0.1.0"}
+      {:file_type, "~> 0.1.0"},
+      {:image, "~> 0.62.1"}
     ]
   end
 

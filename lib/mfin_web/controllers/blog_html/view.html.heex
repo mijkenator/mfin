@@ -30,7 +30,11 @@
                         <ul class="list-disc">
                             <%= for entry <- @post.documents do %>
                             <li>
-                                <a href={~p"/blog/attachment/#{@post.id}/#{entry.id}/#{entry.file.file_name}"}> {entry.file.file_name} </a>
+                                <a href={~p"/blog/attachment/#{@post.id}/#{entry.id}/#{entry.file.file_name}"}>
+                                    <img 
+                                        alt="#{entry.file.file_name}" 
+                                        src={~p"/blog/attachment_preview/#{@post.id}/#{entry.id}/#{entry.file.file_name}"}>
+                                </a>
                             </li>
                             <% end %>
                         </ul>
