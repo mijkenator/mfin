@@ -78,6 +78,7 @@ defmodule MfinWeb.Router do
     get "/blog/post/:post_id", BlogController, :view
     get "/blog/attachment/:post_id/:attachment_id/:file_name", BlogController, :attachment
     get "/blog/attachment_preview/:post_id/:attachment_id/:file_name", BlogController, :attachment_preview
+    get "/photolib", PhotolibController, :view
   end
 
   scope "/", MfinWeb do
