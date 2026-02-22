@@ -18,25 +18,32 @@ defmodule Mfin.Photolib do
   end
 
   def process_import(path, filename_orig) do
+    # check if file already exists
     {:ok, filename} = maybe_format_convert(path, filename_orig)
     {:ok, img} = Image.open(path <> "/view/" <> filename)
-    mdata = case Image.exif(img) do
-      {:ok, md} -> md
-      _ -> %{}
-    end
-    #Logger.info("Picture: #{inspect(filename)} -> #{inspect(mdata)}")
     dhash = case Image.dhash(img) do
       {:ok, dh} -> dh
       _ -> nil
     end
-    exif_date = Kernel.get_in(mdata, [:exif, :datetime_original])
+    case Mfin.Photolib.Picture.is_already_exists(path, filename, dhash) do
+      :already_exists ->
+        Logger.info("Picture already exists: #{inspect(filename)} -> #{inspect(dhash)}")
+        :ok
+      :not_exists ->
+        mdata = case Image.exif(img) do
+          {:ok, md} -> md
+          _ -> %{}
+        end
+        #Logger.info("Picture: #{inspect(filename)} -> #{inspect(mdata)}")
+        exif_date = Kernel.get_in(mdata, [:exif, :datetime_original])
 
-    Mfin.Photolib.Picture.insert_picture(%{
-      picture: filename,
-      dhash: dhash,
-      meta: mdata,
-      exif_date: exif_date
-    })
+        Mfin.Photolib.Picture.insert_picture(%{
+          picture: filename,
+          dhash: dhash,
+          meta: mdata,
+          exif_date: exif_date
+        })
+    end
   end
 
   def maybe_format_convert(path, filename) do
@@ -65,6 +72,9 @@ defmodule Mfin.Photolib do
   def make_preview(path, rootname, ".heic"), do: make_preview(path, rootname, ".jpg")
   def make_preview(path, rootname, extension) do
     p200 = path <> rootname <> "_p_200" <> extension
+  
+    iimg = path <> rootname <> extension
+    Logger.info("MP!!: #{inspect(p200)} --> #{inspect("MP IMPG: #{inspect(iimg)}")}")
 
     with false <- File.exists?(p200),
          {:ok, img} <- Image.open(path <> rootname <> extension),
@@ -73,6 +83,9 @@ defmodule Mfin.Photolib do
       Image.write(preview_img, p200)
       :ok
     else
+      true ->
+        Logger.info("preview already exists")
+        :ok
       error ->
         Logger.info("preview error => #{inspect(error)}")
         :error

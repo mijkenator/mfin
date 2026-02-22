@@ -16,6 +16,7 @@ defmodule Mfin.Repo.Migrations.CreatePhotolibTable do
 
     create index(:photolib, [:dhash])
     create index(:photolib, [:exif_date])
+    create unique_index(:photolib, [:picture, :dhash])
 
   end
 

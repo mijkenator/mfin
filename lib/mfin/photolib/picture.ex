@@ -30,5 +30,18 @@ defmodule Mfin.Photolib.Picture do
     |> Repo.insert()
   end
 
+  def is_already_exists(path, picture, dhash) do
+    isfe = File.exists?(path <> "/view/" <> picture)
+
+    picture = Repo.get_by(Picture, 
+      picture: picture,
+      dhash: dhash)
+
+    case {isfe, picture} do
+      {_, nil} -> :not_exists
+      _ -> :already_exists
+    end
+  end
+
 end
 
