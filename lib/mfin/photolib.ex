@@ -1,6 +1,7 @@
 defmodule Mfin.Photolib do
   import Ecto.Query
   alias Mfin.Repo
+  alias Mfin.Photolib.Picture
   require Logger
 
   @photolib_path  "./photolib"
@@ -92,6 +93,28 @@ defmodule Mfin.Photolib do
     end
 
   end
+
+  def get_pictures(params \\ %{}) do
+    from(m in Picture)
+    |> maybe_where(params)
+    |> maybe_limit(params)
+    |> maybe_offset(params)
+    |> order_by({:asc, :id})
+    |> Repo.all()
+
+  end
+
+  def maybe_limit(query, %{limit: limit}) do
+      limit(query, ^limit)
+  end
+  def maybe_limit(query, _), do: query
+
+  def maybe_offset(query, %{offset: offset}) do
+      offset(query, ^offset)
+  end
+  def maybe_offset(query, _), do: query
+  
+  def maybe_where(query, _), do: query
 
 end
 
