@@ -2,26 +2,32 @@ defmodule MfinWeb.PhotoView.Index do
   use MfinWeb, :live_view
 
   alias MfinWeb.GalleryComponent
+  require Logger
 
   @impl true
   def mount(_params, _session, socket) do
+    socket = assign(socket, page: 1)
     # on initial load it'll return false,
     # then true on the next.
+    Logger.debug("MPI1")
     if connected?(socket) do
+      Logger.debug("MPI100")
       get_images(socket)
     else
+      Logger.debug("MPI101")
       socket
     end
 
+    Logger.debug("MPI2")
     {:ok,
-      socket
-      |> assign(page: 1),
+      socket,
       temporary_assigns: [images: []]
     }
   end
 
   @impl true
   def handle_event("load-more", _, %{assigns: assigns} = socket) do
+    Logger.debug("MPI load-more")
     {:noreply, assign(socket, page: assigns.page + 1) |> get_images()}
   end
 
@@ -32,15 +38,18 @@ defmodule MfinWeb.PhotoView.Index do
   end
 
   defp images do
-    url = "https://images.pexels.com/photos/"
-    query = "?auto=compress&cs=tinysrgbg&w=600"
+    url = ""
+    query = "/blog/attachment_preview/1/61/"
     ~W(
-      2880507 13046522 13076228 13350109 13302244 12883181
-      12977343 13180599 12059441 6431576 10651558 5507243
-      13386712 13290875 13392891 13156418 8581056 13330222
-      10060916 8064098
+      20130829_181853.JPG 20130829_181853.JPG 20130829_181853.JPG 20130829_181853.JPG 20130829_181853.JPG 
+      20130829_181853.JPG 20130829_181853.JPG 20130829_181853.JPG 20130829_181853.JPG 20130829_181853.JPG 
+      20130829_181853.JPG 20130829_181853.JPG 20130829_181853.JPG 20130829_181853.JPG 20130829_181853.JPG 
+      20130829_181853.JPG 20130829_181853.JPG 20130829_181853.JPG 20130829_181853.JPG 20130829_181853.JPG 
+      20130829_181853.JPG 20130829_181853.JPG 20130829_181853.JPG 20130829_181853.JPG 20130829_181853.JPG 
+      20130829_181853.JPG 20130829_181853.JPG 20130829_181853.JPG 20130829_181853.JPG 20130829_181853.JPG 
+      20130829_181853.JPG 20130829_181853.JPG 20130829_181853.JPG 20130829_181853.JPG 20130829_181853.JPG 
     )
-    |> Enum.map(&("#{url}#{&1}/pexels-photo-#{&1}.webp#{query}"))
+    |> Enum.map(&("#{query}#{&1}"))
     |> Enum.shuffle()
   end
 end
