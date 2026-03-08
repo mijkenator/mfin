@@ -101,7 +101,18 @@ defmodule Mfin.Photolib do
     |> maybe_offset(params)
     |> order_by({:asc, :id})
     |> Repo.all()
+  end
 
+  def get_previews(params \\ %{}) do
+    pl = from(m in Picture)
+        |> select([m], {m.picture})
+        |> maybe_where(params)
+        |> maybe_limit(params)
+        |> maybe_offset(params)
+        |> order_by({:asc, :id})
+        |> Repo.all()
+
+    for {pname} <- pl, do: make_preview_name(pname)
   end
 
   def maybe_limit(query, %{limit: limit}) do
@@ -115,6 +126,10 @@ defmodule Mfin.Photolib do
   def maybe_offset(query, _), do: query
   
   def maybe_where(query, _), do: query
+
+  def make_preview_name(name) do
+    Path.rootname(name) <> "_p_200.jpg"
+  end
 
 end
 
