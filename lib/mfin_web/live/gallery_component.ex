@@ -9,7 +9,7 @@ defmodule MfinWeb.GalleryComponent do
       <div
         id="infinite-scroll-body"
         phx-update="append"
-        class="grid grid-cols-3 gap-2"
+        class="grid grid-cols-3 gap-2 _border-2 _h-80 _overflow-y-auto"
       >
         <%= for image <- @images do %>
           <img id={"image-#{random_id()}"} src={image} />

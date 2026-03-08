@@ -13,7 +13,7 @@ export default InfiniteScroll = {
       (entries) => this.loadMore(entries),
       {
         root: null, // window by default
-        rootMargin: "400px",
+        rootMargin: "100px",
         threshold: 0.1,
       }
     );

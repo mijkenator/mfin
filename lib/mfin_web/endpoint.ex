@@ -24,6 +24,11 @@ defmodule MfinWeb.Endpoint do
     from: :mfin,
     gzip: false,
     only: MfinWeb.static_paths()
+  
+  plug Plug.Static,
+    at: "/phtv",
+    from: "./photolib/view/",
+    gzip: false
 
   # Code reloading can be explicitly enabled under the
   # :code_reloader configuration of your endpoint.
