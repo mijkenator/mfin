@@ -11,8 +11,8 @@ defmodule MfinWeb.GalleryComponent do
         phx-update="append"
         class="grid grid-cols-3 gap-2 _border-2 _h-80 _overflow-y-auto"
       >
-        <%= for image <- @images do %>
-          <img class="myImg" id={"image-#{random_id()}"} src={image} alt="Muhahahha" onclick={"open_mkh_image('#{image}')"}/>
+        <%= for {preview, image, _meta} <- @images do %>
+          <img class="myImg" id={"image-#{random_id()}"} src={preview} alt="Muhahahha" onclick={"open_mkh_image('#{image}')"}/>
 
         <% end %>
       </div>

@@ -115,6 +115,19 @@ defmodule Mfin.Photolib do
     for {pname} <- pl, do: make_preview_name(pname)
   end
 
+  def get_gallery(params \\ %{}) do
+    pl = from(m in Picture)
+        |> select([m], {m.picture, m.meta})
+        |> maybe_where(params)
+        |> maybe_limit(params)
+        |> maybe_offset(params)
+        |> order_by({:asc, :id})
+        |> Repo.all()
+
+    for {pname, meta} <- pl, do: {make_preview_name(pname), pname, meta}
+
+  end
+
   def maybe_limit(query, %{limit: limit}) do
       limit(query, ^limit)
   end

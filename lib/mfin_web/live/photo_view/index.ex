@@ -39,8 +39,9 @@ defmodule MfinWeb.PhotoView.Index do
 
   defp images do
     query = "/phtv/"
-    Mfin.Photolib.get_previews()
-    |> Enum.map(&("#{query}#{&1}"))
+    Mfin.Photolib.get_gallery()
+    #|> Enum.map(&({"#{query}#{&1}", "#{query}#{&1}"}))
+    |> Enum.map(fn {pn, n, meta} -> {"#{query}#{pn}", "#{query}#{n}", meta} end)
     |> Enum.shuffle()
   end
 end
