@@ -79,7 +79,7 @@ defmodule Mfin.Photolib do
 
     with false <- File.exists?(p200),
          {:ok, img} <- Image.open(path <> rootname <> extension),
-         {:ok, preview_img} <- Image.thumbnail(img, 200)
+         {:ok, preview_img} <- Image.thumbnail(img, 300)
     do
       Image.write(preview_img, p200)
       :ok

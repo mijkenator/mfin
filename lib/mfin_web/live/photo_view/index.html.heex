@@ -4,13 +4,16 @@
      modal.style.display = "none";
   }
 
-  function open_mkh_image(imga) {
+  function open_mkh_image(imga, data) {
     var modal = document.getElementById("myModal");
     var modalImg = document.getElementById("img01");
     var captionText = document.getElementById("caption");
     modal.style.display = "block";
     modalImg.src = imga;
-    captionText.innerHTML = "KOKOKO";
+    const obj = JSON.parse(data)
+    prettyJson = JSON.stringify(obj, null, 2);
+    captionText.innerHTML = "<pre>" + prettyJson + "</pre>";
+    //captionText.textContent = prettyJson;
   }
 
 </script>
