@@ -34,12 +34,14 @@ defmodule MfinWeb.PhotoView.Index do
   defp get_images(%{assigns: %{page: page}} = socket) do
     socket
     |> assign(page: page)
-    |> assign(images: images())
+    |> assign(images: images(page))
   end
 
-  defp images do
+  defp images(page) do
+    Logger.debug("Images page: #{inspect(page)}")
+    offset = (page-1) * 100
     query = "/phtv/"
-    Mfin.Photolib.get_gallery()
+    Mfin.Photolib.get_gallery(%{limit: 100, offset: offset})
     #|> Enum.map(&({"#{query}#{&1}", "#{query}#{&1}"}))
     |> Enum.map(fn {pn, n, meta} -> {"#{query}#{pn}", "#{query}#{n}", meta} end)
     |> Enum.shuffle()
