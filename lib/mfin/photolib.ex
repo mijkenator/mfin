@@ -20,30 +20,34 @@ defmodule Mfin.Photolib do
 
   def process_import(path, filename_orig) do
     # check if file already exists
-    {:ok, filename} = maybe_format_convert(path, filename_orig)
-    {:ok, img} = Image.open(path <> "/view/" <> filename)
-    dhash = case Image.dhash(img) do
-      {:ok, dh} -> dh
-      _ -> nil
-    end
-    case Mfin.Photolib.Picture.is_already_exists(path, filename, dhash) do
-      :already_exists ->
-        Logger.info("Picture already exists: #{inspect(filename)} -> #{inspect(dhash)}")
-        :ok
-      :not_exists ->
-        mdata = case Image.exif(img) do
-          {:ok, md} -> md
-          _ -> %{}
+    case maybe_format_convert(path, filename_orig) do
+      {:ok, filename} ->
+        {:ok, img} = Image.open(path <> "/view/" <> filename)
+        dhash = case Image.dhash(img) do
+          {:ok, dh} -> dh
+          _ -> nil
         end
-        #Logger.info("Picture: #{inspect(filename)} -> #{inspect(mdata)}")
-        exif_date = Kernel.get_in(mdata, [:exif, :datetime_original])
+        case Mfin.Photolib.Picture.is_already_exists(path, filename, dhash) do
+          :already_exists ->
+            Logger.info("Picture already exists: #{inspect(filename)} -> #{inspect(dhash)}")
+            :ok
+          :not_exists ->
+            mdata = case Image.exif(img) do
+              {:ok, md} -> md
+              _ -> %{}
+            end
+            #Logger.info("Picture: #{inspect(filename)} -> #{inspect(mdata)}")
+            exif_date = Kernel.get_in(mdata, [:exif, :datetime_original])
 
-        Mfin.Photolib.Picture.insert_picture(%{
-          picture: filename,
-          dhash: dhash,
-          meta: mdata,
-          exif_date: exif_date
-        })
+            Mfin.Photolib.Picture.insert_picture(%{
+              picture: filename,
+              dhash: dhash,
+              meta: mdata,
+              exif_date: exif_date
+            })
+        end
+      {:error, efname} ->
+        Logger.error("Error in file convert #{inspect(efname)}")
     end
   end
 
@@ -62,9 +66,14 @@ defmodule Mfin.Photolib do
       false ->
         extension
     end
-    File.rename(path <> "/new/" <> filename, path <> "/view/" <> rootname <> extension)
-    ret = make_preview(path <> "/view/", rootname, extension)
-    {ret, rootname <> new_ext}
+    case File.exists?(path <> "/view/" <> rootname <> new_ext) or not is_convertible(extension) do
+      true ->
+        File.rename(path <> "/new/" <> filename, path <> "/view/" <> rootname <> extension)
+        ret = make_preview(path <> "/view/", rootname, new_ext)
+        {ret, rootname <> new_ext}
+      false ->
+        {:error, rootname <> new_ext}
+    end
   end
 
   defp is_convertible(".heic"), do: true

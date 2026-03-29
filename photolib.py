@@ -7,7 +7,9 @@ from configparser import ConfigParser
 def reset():
     command_string = 'rm -f photolib/view/*'
     result = subprocess.run(command_string, capture_output=True, text=True, shell=True)
-
+    print("Clean up view folder:", result.stdout)
+    command_string = 'rm -f photolib/new/*'
+    result = subprocess.run(command_string, capture_output=True, text=True, shell=True)
     print("Clean up view folder:", result.stdout)
 
 def load_config(filename='database.ini', section='postgresql'):
@@ -62,6 +64,10 @@ def run_query(query_string):
 def main(args):
     reset()
     run_query("delete from photolib")
+    run_query("delete from oban_jobs")
+    subprocess.run("photolib/test/2F1A4BAD-74FF-47EC-A9E9-DADF73ABCD22.heic photolib/new/", capture_output=True, text=True, shell=True)
+    #subprocess.run("photolib/test/82F5F9F0-1807-4B22-ACB0-3F8A0FABE3A7.heic photolib/new/", capture_output=True, text=True, shell=True)
+    #subprocess.run("photolib/test/65235203-ADA0-4F82-B1B1-7E4907B2C184.heic photolib/new/", capture_output=True, text=True, shell=True)
 
 if __name__ == "__main__":
     # The code in this block runs when the file is executed directly
