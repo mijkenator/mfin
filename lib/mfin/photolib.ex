@@ -141,22 +141,31 @@ defmodule Mfin.Photolib do
   SELECT
     EXTRACT(YEAR FROM exif_date) AS year,
     EXTRACT(MONTH FROM exif_date) AS month,
-    count(id)
+    count(id),
+    min(id)
     FROM photolib
     GROUP by year, month
     order by year, month
   """
   def get_pre_gallery() do
-    from(m in Picture,
+    gdata = from(m in Picture,
       select: %{ 
         year: selected_as(fragment("EXTRACT(YEAR FROM exif_date)"), :year), 
         month: selected_as(fragment("EXTRACT(MONTH FROM exif_date)"), :month), 
-        cnt: selected_as(fragment("count(id)"), :cnt)
+        cnt: selected_as(fragment("count(id)"), :cnt),
+        minid: selected_as(fragment("min(id)"), :minid)
       },
       group_by: [selected_as(:year), selected_as(:month)],
       order_by: [selected_as(:year), selected_as(:month)]
     ) |> Repo.all()
 
+    idlst = for e <- gdata, do: e[:minid]
+
+    recs = from(u in Picture,
+      where: u.id in ^idlst
+    ) |> Repo.all()
+
+    {gdata, Map.new(recs, fn x -> {x.id, x} end)}
   end
 
   def maybe_limit(query, %{limit: limit}) do

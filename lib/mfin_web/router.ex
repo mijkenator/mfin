@@ -80,6 +80,7 @@ defmodule MfinWeb.Router do
     get "/blog/attachment_preview/:post_id/:attachment_id/:file_name", BlogController, :attachment_preview
     get "/photolib", PhotolibController, :view
     live "/photoview", PhotoView.Index, :index
+    live "/gallery", PhotoView.Gallery, :gallery
   end
 
   scope "/", MfinWeb do
