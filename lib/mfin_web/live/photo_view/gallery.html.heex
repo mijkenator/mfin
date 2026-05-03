@@ -1,0 +1,35 @@
+<script>
+  function spanonlick() {
+     var modal = document.getElementById("myModal");
+     modal.style.display = "none";
+  }
+
+  function open_mkh_image(imga, data) {
+    var modal = document.getElementById("myModal");
+    var modalImg = document.getElementById("img01");
+    var captionText = document.getElementById("caption");
+    modal.style.display = "block";
+    modalImg.src = imga;
+    const obj = JSON.parse(data)
+    prettyJson = JSON.stringify(obj, null, 2);
+    captionText.innerHTML = "<pre>" + prettyJson + "</pre>";
+    //captionText.textContent = prettyJson;
+  }
+
+</script>
+<div id="myModal" class="modal">
+  <span id="closespan" class="close" onclick="spanonlick()">&times;</span>
+  <img class="modal-content" id="img01">
+  <div id="caption"></div>
+</div>
+
+<section class="my-4">
+  <.live_component
+    module={GalleryComponent}
+    id="infinite-gallery-home"
+    images={@images}
+    page={@page}
+    gtype="preview"
+  />
+</section>
+

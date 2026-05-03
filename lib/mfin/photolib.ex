@@ -168,6 +168,16 @@ defmodule Mfin.Photolib do
     {gdata, Map.new(recs, fn x -> {x.id, x} end)}
   end
 
+  def get_gallery_preview() do
+    {gdata, mdata} = get_pre_gallery()
+
+    for %{month: m, year: y, cnt: c, minid: id} <- gdata do
+      pic = mdata[id]
+      text = "#{m}/#{y} Count: #{c}"
+      {make_preview_name(pic.picture), pic.picture, text}
+    end
+  end
+
   def maybe_limit(query, %{limit: limit}) do
       limit(query, ^limit)
   end
