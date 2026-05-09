@@ -14,7 +14,7 @@ defmodule MfinWeb.GalleryComponent do
   <%= if @gtype == "preview" do %>
         <%= for {preview, image, ptext} <- @images do %>
           <div id={"ic-#{random_id()}"} class="image-container">
-            <img class="myImg" id={"image-#{random_id()}"} src={preview} alt={ptext} onclick={"open_mkh_image('#{image}', '#{ptext}')"}/>
+            <img class="myImg" id={"image-#{random_id()}"} src={preview} alt={ptext} onclick={"open_mkh_subgallery('#{ptext}', '#{ptext}')"}/>
             <p>{ptext}</p>
           </div>
 

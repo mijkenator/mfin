@@ -178,6 +178,22 @@ defmodule Mfin.Photolib do
     end
   end
 
+  def get_subgallery(month, year) do
+    {:ok, d1} = Date.new(year, month, 1)
+    d2 = d1 |> Date.end_of_month()
+    {:ok, dt1} = NaiveDateTime.new(d1, ~T[00:00:00])
+    {:ok, dt2} = NaiveDateTime.new(d2, ~T[23:59:59])
+
+    pl = from(m in Picture)
+        |> select([m], {m.picture, m.meta})
+        |> where([m], m.exif_date >= ^dt1)
+        |> where([m], m.exif_date <= ^dt2)
+        |> order_by([m], asc: m.exif_date, asc: m.id)
+        |> Repo.all()
+
+    for {pname, meta} <- pl, do: {make_preview_name(pname), pname, meta}
+  end
+
   def maybe_limit(query, %{limit: limit}) do
       limit(query, ^limit)
   end
@@ -187,7 +203,13 @@ defmodule Mfin.Photolib do
       offset(query, ^offset)
   end
   def maybe_offset(query, _), do: query
-  
+
+  def maybe_where(query, %{where: filters}) do
+    Enum.reduce(filters, query, fn 
+      {key, value}, q ->
+        where(q, [m], field(m, ^key) == ^value)
+    end)
+  end
   def maybe_where(query, _), do: query
 
   def make_preview_name(name) do
