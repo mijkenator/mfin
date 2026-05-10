@@ -178,7 +178,7 @@ defmodule Mfin.Photolib do
     end
   end
 
-  def get_subgallery(month, year) do
+  def get_subgallery(month, year, params) do
     {:ok, d1} = Date.new(year, month, 1)
     d2 = d1 |> Date.end_of_month()
     {:ok, dt1} = NaiveDateTime.new(d1, ~T[00:00:00])
@@ -189,6 +189,8 @@ defmodule Mfin.Photolib do
         |> where([m], m.exif_date >= ^dt1)
         |> where([m], m.exif_date <= ^dt2)
         |> order_by([m], asc: m.exif_date, asc: m.id)
+        |> maybe_limit(params)
+        |> maybe_offset(params)
         |> Repo.all()
 
     for {pname, meta} <- pl, do: {make_preview_name(pname), pname, meta}
