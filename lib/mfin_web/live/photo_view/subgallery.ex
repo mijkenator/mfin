@@ -5,11 +5,11 @@ defmodule MfinWeb.PhotoView.Subgallery do
   require Logger
 
   @impl true
-  def mount(_params, _session, socket) do
+  def mount(params, _session, socket) do
     socket = assign(socket, page: 1)
     # on initial load it'll return false,
     # then true on the next.
-    Logger.debug("MPI1")
+    Logger.debug("SUBGALLERY: #{inspect(params)}")
     if connected?(socket) do
       Logger.debug("MPI100")
       get_images(socket)
@@ -20,7 +20,7 @@ defmodule MfinWeb.PhotoView.Subgallery do
 
     Logger.debug("MPI2")
     {:ok,
-      socket,
+      socket |> assign(:month, params["month"]) |> assign(:year, params["year"]),
       temporary_assigns: [images: []]
     }
   end

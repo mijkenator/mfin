@@ -26,12 +26,17 @@
   <img class="modal-content" id="img01">
   <div id="caption"></div>
 </div>
-
+<div>
+<h1 class="text-4xl font-bold text-gray-900 text-center">
+{@month} - {@year} 
+</h1>
+</div>
 <section class="my-4">
   <.live_component
     module={GalleryComponent}
     id="infinite-gallery-home"
     images={@images}
     page={@page}
+    gtype="subgallery"
   />
 </section>
