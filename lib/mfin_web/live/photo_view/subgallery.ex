@@ -11,14 +11,11 @@ defmodule MfinWeb.PhotoView.Subgallery do
     # then true on the next.
     Logger.debug("SUBGALLERY: #{inspect(params)}")
     if connected?(socket) do
-      Logger.debug("MPI100")
-      get_images(socket)
+      get_images(socket, params)
     else
-      Logger.debug("MPI101")
       socket
     end
 
-    Logger.debug("MPI2")
     {:ok,
       socket |> assign(:month, params["month"]) |> assign(:year, params["year"]),
       temporary_assigns: [images: []]
@@ -28,22 +25,22 @@ defmodule MfinWeb.PhotoView.Subgallery do
   @impl true
   def handle_event("load-more", _, %{assigns: assigns} = socket) do
     Logger.debug("MPI load-more #{inspect(assigns)}")
-    {:noreply, assign(socket, page: assigns.page + 1) |> get_images()}
+    %{month: m, year: y} = assigns
+    {:noreply, assign(socket, page: assigns.page + 1) |> get_images(%{"month" => m, "year" => y})}
   end
 
-  defp get_images(%{assigns: %{page: page}} = socket) do
+  defp get_images(%{assigns: %{page: page}} = socket, params) do
     socket
     |> assign(page: page)
-    |> assign(images: images(page))
+    |> assign(images: images(page, params))
   end
 
-  defp images(page) do
+  defp images(page, %{"month" =>  m, "year" =>  y} = params) do
     Logger.debug("Images page: #{inspect(page)}")
     offset = (page-1) * 100
     query = "/phtv/"
-    Mfin.Photolib.get_gallery(%{limit: 100, offset: offset})
+    Mfin.Photolib.get_subgallery(String.to_integer(m), String.to_integer(y), %{limit: 100, offset: offset})
     #|> Enum.map(&({"#{query}#{&1}", "#{query}#{&1}"}))
     |> Enum.map(fn {pn, n, meta} -> {"#{query}#{pn}", "#{query}#{n}", meta} end)
-    |> Enum.shuffle()
   end
 end
