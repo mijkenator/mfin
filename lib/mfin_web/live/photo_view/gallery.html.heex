@@ -17,9 +17,12 @@
   }
   
   function open_mkh_subgallery(imga, data) {
-      [m, y] = data.split(" ")[0].split("/");
-      window.alert(m + " <-> " + y)
-      window.location.href = "/gallery/" + m + "/" + y;
+      if(data.startsWith("Count")){
+        window.location.href = "/gallery/undefined/undefined";
+      } else {
+        [m, y] = data.split(" ")[0].split("/");
+        window.location.href = "/gallery/" + m + "/" + y;
+      }
   }
 
 </script>

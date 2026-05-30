@@ -173,12 +173,30 @@ defmodule Mfin.Photolib do
 
     for %{month: m, year: y, cnt: c, minid: id} <- gdata do
       pic = mdata[id]
-      text = "#{m}/#{y} Count: #{c}"
+      text = case {m,y} do
+        {nil, nil} -> "Count #{c}"
+        _ -> "#{m}/#{y} Count: #{c}"
+      end
       {make_preview_name(pic.picture), pic.picture, text}
     end
   end
 
+  def get_undef_subgallery(params) do
+    Logger.debug("UNDEF SUBGALLERY: #{inspect(params)}")
+
+    pl = from(m in Picture)
+        |> select([m], {m.picture, m.meta})
+        |> where([m], is_nil(m.exif_date))
+        |> order_by([m], asc: m.id)
+        |> maybe_limit(params)
+        |> maybe_offset(params)
+        |> Repo.all()
+
+    for {pname, meta} <- pl, do: {make_preview_name(pname), pname, meta}
+  end
+
   def get_subgallery(month, year, params) do
+    Logger.debug("GETSUBGALLERY: #{inspect(month)}, #{inspect(year)}, #{inspect(params)}")
     {:ok, d1} = Date.new(year, month, 1)
     d2 = d1 |> Date.end_of_month()
     {:ok, dt1} = NaiveDateTime.new(d1, ~T[00:00:00])
