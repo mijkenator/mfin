@@ -34,6 +34,14 @@
   <div id="caption"></div>
 </div>
 <div>
+
+<%= if @pcount > 10 do %>
+<div class="">
+        <a  class="text-white bg-blue-700 hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 font-medium rounded-full text-sm px-5 py-2.5 text-center me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800" href={~p"/gallery"} > Main gallery</a>
+        <a  class="text-white bg-blue-700 hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 font-medium rounded-full text-sm px-5 py-2.5 text-center me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800" href={~p"/slideshow/#{@month}/#{@year}"} > Slide show</a>
+</div>
+<% end %>
+
 <h1 class="text-4xl font-bold text-gray-900 text-center">
     <%= if @month == "undefined" do %>
         "No EXIF date"

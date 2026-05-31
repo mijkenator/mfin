@@ -9,7 +9,7 @@ defmodule MfinWeb.GalleryComponent do
       <div
         id="infinite-scroll-body"
         phx-update="append"
-        class="grid grid-cols-3 gap-2 _border-2 _h-80 _overflow-y-auto"
+        class="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-5  _h-80 _overflow-y-auto"
       >
   <%= if @gtype == "preview" do %>
         <%= for {preview, image, ptext} <- @images do %>
@@ -21,9 +21,10 @@ defmodule MfinWeb.GalleryComponent do
         <% end %>
 
   <% else %>
-        <%= for {preview, image, meta} <- @images do %>
-          <img class="myImg" id={"image-#{random_id()}"} src={preview} alt="Muhahahha" onclick={"open_mkh_image('#{image}', '#{Jason.encode!(meta)}')"}/>
-
+            <%= for {preview, image, meta} <- @images do %>
+              <div id={"ic-#{random_id()}"}>
+                  <img class="myImg object-cover object-center w-full max-w-full rounded-lg" id={"image-#{random_id()}"} src={preview} alt="Muhahahha" onclick={"open_mkh_image('#{image}', '#{Jason.encode!(meta)}')"}/>
+           </div>
         <% end %>
   <% end %>
 
@@ -32,4 +33,5 @@ defmodule MfinWeb.GalleryComponent do
     </div>
     """
   end
+
 end

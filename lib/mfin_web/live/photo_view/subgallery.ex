@@ -17,7 +17,10 @@ defmodule MfinWeb.PhotoView.Subgallery do
     #end
 
     {:ok,
-      socket |> assign(:month, params["month"]) |> assign(:year, params["year"]),
+      socket 
+        |> assign(:month, params["month"]) 
+        |> assign(:year, params["year"])
+        |> assign(:pcount, 0),
       temporary_assigns: [images: []]
     }
   end
@@ -31,9 +34,13 @@ defmodule MfinWeb.PhotoView.Subgallery do
   end
 
   defp get_images(%{assigns: %{page: page}} = socket, params) do
+    imgs = images(page, params)
     socket
     |> assign(page: page)
-    |> assign(images: images(page, params))
+    |> assign(images: imgs)
+    |> then(fn s -> 
+        if page == 1, do: assign(s, pcount: length(imgs)), else: s
+       end)
   end
 
   defp images(page, %{"month" =>  m, "year" =>  y} = params) do

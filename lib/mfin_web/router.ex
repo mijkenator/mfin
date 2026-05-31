@@ -81,6 +81,7 @@ defmodule MfinWeb.Router do
     get "/photolib", PhotolibController, :view
     live "/photoview", PhotoView.Index, :index
     live "/gallery/:month/:year", PhotoView.Subgallery, :subgallery
+    live "/slideshow/:month/:year", PhotoView.Subgallery, :subgallery
     live "/gallery", PhotoView.Gallery, :gallery
   end
 

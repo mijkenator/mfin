@@ -6,17 +6,17 @@ defmodule MfinWeb.PhotoView.Index do
 
   @impl true
   def mount(_params, _session, socket) do
-    socket = assign(socket, page: 1)
+    socket = assign(socket, page: 0)
     # on initial load it'll return false,
     # then true on the next.
-    Logger.debug("MPI1")
-    if connected?(socket) do
-      Logger.debug("MPI100")
-      get_images(socket)
-    else
-      Logger.debug("MPI101")
-      socket
-    end
+    #Logger.debug("MPI1")
+    #if connected?(socket) do
+    #  Logger.debug("MPI100")
+    #  get_images(socket)
+    #else
+    #  Logger.debug("MPI101")
+    #  socket
+    #end
 
     Logger.debug("MPI2")
     {:ok,
