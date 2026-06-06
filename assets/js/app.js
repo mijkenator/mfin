@@ -23,6 +23,7 @@ import {LiveSocket} from "phoenix_live_view"
 import topbar from "../vendor/topbar"
 
 import InfiniteScroll from "./infinite_scroll"
+import 'flowbite/dist/flowbite.phoenix.js';
 
 
 let csrfToken = document.querySelector("meta[name='csrf-token']").getAttribute("content")
