@@ -21,7 +21,8 @@ defmodule MfinWeb.PhotoView.Slideshow do
         |> assign(:month, params["month"]) 
         |> assign(:year, params["year"])
         |> assign(:pcount, 0),
-      temporary_assigns: [images: []]
+      temporary_assigns: [images: []],
+      layout: {MfinWeb.Layouts, :slideshow}
     }
   end
 

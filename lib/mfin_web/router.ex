@@ -81,8 +81,11 @@ defmodule MfinWeb.Router do
     get "/photolib", PhotolibController, :view
     live "/photoview", PhotoView.Index, :index
     live "/gallery/:month/:year", PhotoView.Subgallery, :subgallery
-    live "/slideshow/:month/:year", PhotoView.Slideshow, :index
     live "/gallery", PhotoView.Gallery, :gallery
+
+    live_session :custom_layout_session, root_layout: {MfinWeb.Layouts, :custom_root} do
+      live "/slideshow/:month/:year", PhotoView.Slideshow, :index
+    end
   end
 
   scope "/", MfinWeb do
