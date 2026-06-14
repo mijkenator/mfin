@@ -6,29 +6,18 @@
 <div id="default-carousel" class="w-full h-1/2" data-carousel="static">
     <!-- Carousel wrapper -->
     <div class="h-1/2 overflow-hidden rounded-base md:h-1/2">
-        <div class="hidden duration-700 ease-in-out" data-carousel-item>
-            <img src="/phtv/4297DCBF-1631-4A36-AC54-E5F52E397BEA.jpg" class="absolute block max-h-screen w-full object-contain" alt="...">
-        </div>
-        <div class="hidden duration-700 ease-in-out" data-carousel-item>
-            <img src="/phtv/8D793C9B-5D9B-497B-9FE7-BF387894062F.jpg" class="absolute block max-h-screen w-full object-contain" alt="...">
-        </div>
-        <div class="hidden duration-700 ease-in-out" data-carousel-item>
-            <img src="/phtv/7DD4679F-E0E3-410E-9057-8CC802726840.jpg" class="absolute block max-h-screen w-full object-contain" alt="...">
-        </div>
-        <div class="hidden duration-700 ease-in-out" data-carousel-item>
-            <img src="/phtv/8D793C9B-5D9B-497B-9FE7-BF387894062F.jpg" class="absolute block max-h-screen w-full object-contain" alt="...">
-        </div>
-        <div class="hidden duration-700 ease-in-out" data-carousel-item>
-            <img src="/phtv/8D793C9B-5D9B-497B-9FE7-BF387894062F.jpg" class="absolute block max-h-screen w-full object-contain" alt="...">
-        </div>
+        <%= for {preview, image, meta} <- @images do %>
+            <div class="hidden duration-700 ease-in-out" data-carousel-item>
+                <img id={"ic-#{random_id()}"} src={"#{image}"} class="absolute block max-h-screen w-full object-contain" alt="...">
+            </div>
+        <% end %>
+
     </div>
     <!-- Slider indicators -->
     <div class="absolute z-30 flex -translate-x-1/2 bottom-5 left-1/2 space-x-3 rtl:space-x-reverse">
-        <button type="button" class="w-3 h-3 rounded-base" aria-current="true" aria-label="Slide 1" data-carousel-slide-to="0"></button>
-        <button type="button" class="w-3 h-3 rounded-base" aria-current="false" aria-label="Slide 2" data-carousel-slide-to="1"></button>
-        <button type="button" class="w-3 h-3 rounded-base" aria-current="false" aria-label="Slide 3" data-carousel-slide-to="2"></button>
-        <button type="button" class="w-3 h-3 rounded-base" aria-current="false" aria-label="Slide 4" data-carousel-slide-to="3"></button>
-        <button type="button" class="w-3 h-3 rounded-base" aria-current="false" aria-label="Slide 5" data-carousel-slide-to="4"></button>
+        <%= for {{preview, image, meta}, index} <- Enum.with_index(@images) do %>
+            <button type="button" class="w-3 h-3 rounded-base" aria-current="false" aria-label={"Slide #{index+1}"} data-carousel-slide-to={"#{index}"}></button>
+        <% end %>
     </div>
     <!-- Slider controls -->
     <button type="button" class="absolute top-0 start-0 z-30 flex items-center justify-center h-full px-4 cursor-pointer group focus:outline-none" data-carousel-prev>
@@ -44,4 +33,5 @@
         </span>
     </button>
 </div>
+
 

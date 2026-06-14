@@ -9,12 +9,14 @@ defmodule MfinWeb.PhotoView.Slideshow do
     socket = assign(socket, page: 0)
     # on initial load it'll return false,
     # then true on the next.
-    Logger.debug("SUBGALLERY: #{inspect(params)}")
-    #if connected?(socket) do
-    #  get_images(socket, params)
-    #else
-    #  socket
-    #end
+    Logger.debug("SLIDESHOW: #{inspect(params)}")
+    socket = 
+      if connected?(socket) do
+        Logger.debug("GETIMAGES")
+        get_images(socket, params)
+      else
+        socket
+      end
 
     {:ok,
       socket 
@@ -60,4 +62,7 @@ defmodule MfinWeb.PhotoView.Slideshow do
         |> Enum.map(fn {pn, n, meta} -> {"#{query}#{pn}", "#{query}#{n}", meta} end)
     end
   end
+
+  defp random_id, do: Enum.random(1..1_000_000)
+
 end
