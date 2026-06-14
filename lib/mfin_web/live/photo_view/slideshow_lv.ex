@@ -1,4 +1,4 @@
-defmodule MfinWeb.PhotoView.Slideshow do
+defmodule MfinWeb.PhotoView.SlideshowLv do
   use MfinWeb, :live_view
 
   alias MfinWeb.GalleryComponent
@@ -27,7 +27,15 @@ defmodule MfinWeb.PhotoView.Slideshow do
       layout: {MfinWeb.Layouts, :slideshow}
     }
   end
-  
+
+  @impl true
+  def handle_event("load-more", _, %{assigns: assigns} = socket) do
+    Logger.debug("MPI load-more #{inspect(assigns)}")
+    %{month: m, year: y} = assigns
+    {:noreply, assign(socket, page: assigns.page + 1) |> get_images(%{"month" => m, "year" => y})}
+    #{:noreply, socket}
+  end
+
   defp get_images(%{assigns: %{page: page}} = socket, params) do
     imgs = images(page, params)
     socket
@@ -58,3 +66,4 @@ defmodule MfinWeb.PhotoView.Slideshow do
   defp random_id, do: Enum.random(1..1_000_000)
 
 end
+

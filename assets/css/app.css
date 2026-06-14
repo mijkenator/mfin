@@ -78,6 +78,18 @@
   cursor: pointer;
 }
 
+#slide_closespan {
+  color: #e50c0c;
+  z-index: 10000;
+}
+
+#slide_closespan.close:hover,
+#slide_closespan.close:focus {
+  color: #bbb;
+  text-decoration: none;
+  cursor: pointer;
+}
+
 /* 100% Image Width on Smaller Screens */
 @media only screen and (max-width: 700px){
   .modal-content {

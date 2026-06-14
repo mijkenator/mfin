@@ -1,18 +1,13 @@
+defmodule MfinWeb.SlideShowComponent do
+  use MfinWeb, :live_component
 
-<script>
-  function ss_spanonlick() {
-      window.location.href = "/gallery"
-  }
-</script>
+  defp random_id, do: Enum.random(1..1_000_000)
 
-<!--
-<link href="https://cdn.jsdelivr.net/npm/flowbite@{{< current_version >}}/dist/flowbite.min.css" rel="stylesheet" />
-<script src="https://cdn.jsdelivr.net/npm/flowbite@{{< current_version >}}/dist/flowbite.min.js"></script>
-//-->
+  def render(assigns) do
+    ~H"""
 
 <div id="default-carousel" class="w-full h-1/2" data-carousel="static">
-    <!-- Carousel wrapper -->
-    <span id="slide_closespan" class="close" onclick="ss_spanonlick()">&times;</span>
+    <span id="slide_closespan" class="close" onclick="window.location.href = /gallery'">&times;</span>
     <div class="h-1/2 overflow-hidden rounded-base md:h-1/2">
         <%= for {preview, image, meta} <- @images do %>
             <div class="hidden duration-700 ease-in-out" data-carousel-item>
@@ -20,14 +15,8 @@
             </div>
         <% end %>
 
-    </div>
-    <!-- Slider indicators -->
-    <div class="absolute z-30 flex -translate-x-1/2 bottom-5 left-1/2 space-x-3 rtl:space-x-reverse">
-        <%= for {{preview, image, meta}, index} <- Enum.with_index(@images) do %>
-            <button type="button" class="w-3 h-3 rounded-base" aria-current="false" aria-label={"Slide #{index+1}"} data-carousel-slide-to={"#{index}"}></button>
-        <% end %>
-    </div>
-    <!-- Slider controls -->
+      </div>
+
     <button type="button" class="absolute top-0 start-0 z-30 flex items-center justify-center h-full px-4 cursor-pointer group focus:outline-none" data-carousel-prev>
         <span class="inline-flex items-center justify-center w-10 h-10 rounded-base bg-white/30 dark:bg-gray-800/30 group-hover:bg-white/50 dark:group-hover:bg-gray-800/60 group-focus:ring-4 group-focus:ring-white dark:group-focus:ring-gray-800/70 group-focus:outline-none">
             <svg class="w-25 h-25 text-white rtl:rotate-180" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="44" height="44" fill="red" viewBox="0 0 24 24"><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m15 19-7-7 7-7"/></svg>
@@ -41,5 +30,8 @@
         </span>
     </button>
 </div>
+    """
+  end
 
+end
 

@@ -85,6 +85,7 @@ defmodule MfinWeb.Router do
 
     live_session :custom_layout_session, root_layout: {MfinWeb.Layouts, :custom_root} do
       live "/slideshow/:month/:year", PhotoView.Slideshow, :index
+      live "/ss/:month/:year", PhotoView.SlideshowLv, :index
     end
   end
 
