@@ -36,6 +36,26 @@ defmodule MfinWeb.PhotoView.SlideshowLv do
     #{:noreply, socket}
   end
 
+  def handle_event("ss_prev", _params, %{assigns: assigns} = socket) do
+    Logger.debug("EVENT ss_prev #{inspect(assigns)}")
+    %{pcount: pcount} = assigns
+    images = []
+    {:noreply, socket
+      |> assign(:pcount, pcount - 1) 
+      |> assign(:images, images)
+    }
+  end
+  
+  def handle_event("ss_next", _params, %{assigns: assigns} = socket) do
+    Logger.debug("EVENT ss_next #{inspect(assigns)}")
+    %{pcount: pcount} = assigns
+    images = []
+    {:noreply, socket
+      |> assign(:pcount, pcount + 1) 
+      |> assign(:images, images)
+    }
+  end
+
   defp get_images(%{assigns: %{page: page}} = socket, params) do
     imgs = images(page, params)
     socket
@@ -55,10 +75,27 @@ defmodule MfinWeb.PhotoView.SlideshowLv do
     query = "/phtv/"
     case {m, y} do
       {"undefined", "undefined"} ->
-        Mfin.Photolib.get_undef_subgallery(%{limit: 100, offset: offset})
+        Mfin.Photolib.get_undef_subgallery(%{limit: 1, offset: offset})
         |> Enum.map(fn {pn, n, meta} -> {"#{query}#{pn}", "#{query}#{n}", meta} end)
       _ ->
-        Mfin.Photolib.get_subgallery(String.to_integer(m), String.to_integer(y), %{limit: 100, offset: offset})
+        Mfin.Photolib.get_subgallery(String.to_integer(m), String.to_integer(y), %{limit: 1, offset: offset})
+        |> Enum.map(fn {pn, n, meta} -> {"#{query}#{pn}", "#{query}#{n}", meta} end)
+    end
+  end
+
+  defp load_image(page, %{"month" =>  m, "year" =>  y} = params) do
+    Logger.debug("Images page: #{inspect(page)}")
+    offset = case page do
+      0 -> 0
+      _ -> (page-1) * 100
+    end
+    query = "/phtv/"
+    case {m, y} do
+      {"undefined", "undefined"} ->
+        Mfin.Photolib.get_undef_subgallery(%{limit: 1, offset: offset})
+        |> Enum.map(fn {pn, n, meta} -> {"#{query}#{pn}", "#{query}#{n}", meta} end)
+      _ ->
+        Mfin.Photolib.get_subgallery(String.to_integer(m), String.to_integer(y), %{limit: 1, offset: offset})
         |> Enum.map(fn {pn, n, meta} -> {"#{query}#{pn}", "#{query}#{n}", meta} end)
     end
   end
